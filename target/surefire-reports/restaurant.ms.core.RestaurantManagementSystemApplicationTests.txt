@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: restaurant.ms.core.RestaurantManagementSystemApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.488 s - in restaurant.ms.core.RestaurantManagementSystemApplicationTests
