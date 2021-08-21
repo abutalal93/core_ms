@@ -60,6 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/webjars/**")
                 .antMatchers("/public")
                 .antMatchers("/sp/user/login")
+                .antMatchers("/rest/user/login")
                 .antMatchers("/lookups/**")
         ;
     }

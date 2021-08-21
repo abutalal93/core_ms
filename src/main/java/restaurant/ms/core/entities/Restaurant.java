@@ -130,6 +130,7 @@ public class Restaurant {
         restaurantSearchRs.setEmail(this.email);
         restaurantSearchRs.setMobileNumber(this.mobileNumber);
         restaurantSearchRs.setPhoneNumber(this.phoneNumber);
+        restaurantSearchRs.setStatus(this.status.name());
 
         return restaurantSearchRs;
     }

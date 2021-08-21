@@ -4,6 +4,9 @@ package restaurant.ms.core.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import restaurant.ms.core.dto.responses.CategorySearchRs;
+import restaurant.ms.core.dto.responses.QrSearchRs;
+import restaurant.ms.core.enums.Status;
 
 import javax.persistence.*;
 import java.util.Locale;
@@ -33,9 +36,30 @@ public class Category {
     @Column(name = "name_ar")
     private String nameAr;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private Status status;
+
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+
+    public Category(Long id) {
+        this.id = id;
+    }
+
+    public CategorySearchRs toCategorySearchRs(){
+        CategorySearchRs categorySearchRs = new CategorySearchRs();
+
+        categorySearchRs.setAvatar(this.avatar);
+        categorySearchRs.setNameEn(this.nameEn);
+        categorySearchRs.setNameAr(this.nameAr);
+        categorySearchRs.setCode(this.code);
+        categorySearchRs.setStatus(this.status.name());
+        categorySearchRs.setId(this.id);
+
+        return categorySearchRs;
+    }
 
     public String getName(Locale locale){
         if(locale.getISO3Language().equalsIgnoreCase("eng")){

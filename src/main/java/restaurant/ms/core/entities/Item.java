@@ -4,6 +4,9 @@ package restaurant.ms.core.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import restaurant.ms.core.dto.responses.CategorySearchRs;
+import restaurant.ms.core.dto.responses.ItemSearchRs;
+import restaurant.ms.core.enums.Status;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -47,6 +50,26 @@ public class Item {
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private Status status;
+
+    public ItemSearchRs toItemSearchRs(){
+        ItemSearchRs itemSearchRs = new ItemSearchRs();
+
+        itemSearchRs.setAvatar(this.avatar);
+        itemSearchRs.setNameEn(this.nameEn);
+        itemSearchRs.setNameAr(this.nameAr);
+        itemSearchRs.setUnitPrice(this.unitPrice);
+        itemSearchRs.setDescription(this.description);
+        itemSearchRs.setCode(this.code);
+        itemSearchRs.setStatus(this.status.name());
+        itemSearchRs.setId(this.id);
+        itemSearchRs.setCategoryId(this.category.getId());
+
+        return itemSearchRs;
+    }
 
     public String getName(Locale locale){
         if(locale.getISO3Language().equalsIgnoreCase("eng")){

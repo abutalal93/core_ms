@@ -18,4 +18,5 @@ public class RestaurantSearchRs {
     private String email;
     private String phoneNumber;
     private String mobileNumber;
+    private String status;
 }

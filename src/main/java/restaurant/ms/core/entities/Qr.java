@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import restaurant.ms.core.dto.responses.QrSearchRs;
+import restaurant.ms.core.dto.responses.RestaurantSearchRs;
 import restaurant.ms.core.enums.Status;
 
 import javax.persistence.*;
@@ -38,5 +40,17 @@ public class Qr {
 
     @Column(name = "create_date")
     private LocalDateTime createDate;
+
+    public QrSearchRs toQrSearchRs(){
+        QrSearchRs qrSearchRs = new QrSearchRs();
+
+        qrSearchRs.setCreateDate(this.createDate);
+        qrSearchRs.setAlias(this.alias);
+        qrSearchRs.setCode(this.code);
+        qrSearchRs.setStatus(this.status.name());
+        qrSearchRs.setId(this.id);
+
+        return qrSearchRs;
+    }
 
 }
