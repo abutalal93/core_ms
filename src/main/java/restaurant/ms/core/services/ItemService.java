@@ -31,7 +31,7 @@ public class ItemService {
     private ItemRepo itemRepo;
 
 
-    public PageRs searchItem(Integer page, Integer size, Locale locale) {
+    public PageRs searchItem(RestaurantUser restaurantUser,Integer page, Integer size, Locale locale) {
         if (page == null)
             page = 0;
         if (size == null)
@@ -39,7 +39,7 @@ public class ItemService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id");
 
-        Page<Item> itemPage = itemRepo.findAllBy(pageable);
+        Page<Item> itemPage = itemRepo.findAllBy(restaurantUser.getRestaurant(),pageable);
 
         List<Item> itemList = itemPage.getContent();
 

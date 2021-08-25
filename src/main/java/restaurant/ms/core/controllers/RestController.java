@@ -76,7 +76,7 @@ public class RestController {
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        PageRs pageRs = qrService.searchQr(page,size,locale);
+        PageRs pageRs = qrService.searchQr(restaurantUser,page,size,locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", pageRs, locale);
 
@@ -151,7 +151,7 @@ public class RestController {
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        PageRs pageRs = categoryService.searchCategory(page,size,locale);
+        PageRs pageRs = categoryService.searchCategory(restaurantUser,page,size,locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", pageRs, locale);
 
@@ -226,7 +226,7 @@ public class RestController {
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        PageRs pageRs = itemService.searchItem(page,size,locale);
+        PageRs pageRs = itemService.searchItem(restaurantUser,page,size,locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", pageRs, locale);
 

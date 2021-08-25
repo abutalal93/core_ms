@@ -32,7 +32,7 @@ public class CategoryService {
     private CategoryRepo categoryRepo;
 
 
-    public PageRs searchCategory(Integer page, Integer size, Locale locale) {
+    public PageRs searchCategory(RestaurantUser restaurantUser,Integer page, Integer size, Locale locale) {
         if (page == null)
             page = 0;
         if (size == null)
@@ -40,7 +40,7 @@ public class CategoryService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id");
 
-        Page<Category> categoryPage = categoryRepo.findAllBy(pageable);
+        Page<Category> categoryPage = categoryRepo.findAllBy(restaurantUser.getRestaurant(),pageable);
 
         List<Category> categoryList = categoryPage.getContent();
 

@@ -43,7 +43,7 @@ public class QrService {
     @Autowired
     private ItemRepo itemRepo;
 
-    public PageRs searchQr(Integer page, Integer size, Locale locale) {
+    public PageRs searchQr(RestaurantUser restaurantUser,Integer page, Integer size, Locale locale) {
         if (page == null)
             page = 0;
         if (size == null)
@@ -51,7 +51,7 @@ public class QrService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id");
 
-        Page<Qr> qrPage = qrRepo.findAllBy(pageable);
+        Page<Qr> qrPage = qrRepo.findAllByRestaurant(restaurantUser.getRestaurant(),pageable);
 
         List<Qr> qrList = qrPage.getContent();
 
