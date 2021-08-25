@@ -15,6 +15,7 @@ import restaurant.ms.core.dto.requests.SpLoginRq;
 import restaurant.ms.core.dto.responses.PageRs;
 import restaurant.ms.core.dto.responses.RestaurantSearchRs;
 import restaurant.ms.core.dto.responses.SpLoginRs;
+import restaurant.ms.core.entities.Item;
 import restaurant.ms.core.entities.Restaurant;
 import restaurant.ms.core.entities.RestaurantUser;
 import restaurant.ms.core.entities.SpUser;
@@ -85,6 +86,46 @@ public class RestaurantService {
 //        restaurant.setCreateDate(LocalDateTime.now());
 //        restaurant.setExpireDate(LocalDateTime.now().plusMonths(6));
 //        restaurant.setSpUser(spUser);
+
+        restaurantRepo.save(restaurant);
+    }
+
+    public void activeOrInactiveRest(Long itemId, SpUser spUser, Locale locale) {
+
+        Restaurant restaurant = restaurantRepo.findRestaurantById(itemId);
+
+        if(restaurant == null){
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST,"QR not found",locale);
+        }
+
+        if(restaurant.getStatus().equals(Status.DELETED)){
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST,"QR not found",locale);
+        }
+
+        if(restaurant.getStatus().equals(Status.INACTIVE)){
+            restaurant.setStatus(Status.ACTIVE);
+        }else{
+            if(restaurant.getStatus().equals(Status.ACTIVE)){
+                restaurant.setStatus(Status.INACTIVE);
+            }
+        }
+
+        restaurantRepo.save(restaurant);
+    }
+
+    public void deleteRest(Long itemId, SpUser spUser, Locale locale) {
+
+        Restaurant restaurant = restaurantRepo.findRestaurantById(itemId);
+
+        if(restaurant == null){
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST,"QR not found",locale);
+        }
+
+        if(restaurant.getStatus().equals(Status.DELETED)){
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST,"QR not found",locale);
+        }
+
+        restaurant.setStatus(Status.DELETED);
 
         restaurantRepo.save(restaurant);
     }

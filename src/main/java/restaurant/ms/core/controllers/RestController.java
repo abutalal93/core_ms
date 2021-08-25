@@ -67,6 +67,7 @@ public class RestController {
     }
 
     ////////////////////////////////////////////////////////////////////
+
     @RequestMapping(value = "/qr/search",method = RequestMethod.GET)
     public ResponseEntity<MessageEnvelope> searchQr(HttpServletRequest httpServletRequest,
                                                     @RequestParam(value = "page", required = false) Integer page,

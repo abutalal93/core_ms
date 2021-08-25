@@ -11,11 +11,9 @@ import restaurant.ms.core.configrations.MessageEnvelope;
 import restaurant.ms.core.dto.requests.RestaurantCreateRq;
 import restaurant.ms.core.dto.requests.RestaurantUpdateRq;
 import restaurant.ms.core.dto.requests.SpLoginRq;
-import restaurant.ms.core.dto.responses.FileRs;
-import restaurant.ms.core.dto.responses.PageRs;
-import restaurant.ms.core.dto.responses.RestaurantSearchRs;
-import restaurant.ms.core.dto.responses.SpLoginRs;
+import restaurant.ms.core.dto.responses.*;
 import restaurant.ms.core.entities.FileDb;
+import restaurant.ms.core.entities.RestaurantUser;
 import restaurant.ms.core.entities.SpUser;
 import restaurant.ms.core.security.JwtTokenProvider;
 import restaurant.ms.core.security.JwtUser;
@@ -48,6 +46,27 @@ public class SpController {
 
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/user/refresh",method = RequestMethod.GET)
+    public ResponseEntity<MessageEnvelope> userLogin(HttpServletRequest httpServletRequest) {
+
+        Locale locale = httpServletRequest.getLocale();
+
+        SpUser spUser = spUserService.getSpUser(httpServletRequest);
+
+        SpLoginRs spLoginRs = new SpLoginRs();
+        spLoginRs.setId(spUser.getId());
+        spLoginRs.setUsername(spUser.getUsername());
+        spLoginRs.setFirstName(spUser.getFirstName());
+        spLoginRs.setLastName(spUser.getLastName());
+        spLoginRs.setPassword(spUser.getPassword());
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", spLoginRs, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+    ////////////////////////////////////////////////////////////////////
 
     @RequestMapping(value = "/rest/search",method = RequestMethod.GET)
     public ResponseEntity<MessageEnvelope> restaurantCreate(HttpServletRequest httpServletRequest,
@@ -86,6 +105,34 @@ public class SpController {
         SpUser spUser = spUserService.getSpUser(httpServletRequest);
 
         restaurantService.updateRestaurant(restaurantUpdateRq,spUser,locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/rest/activeInactive",method = RequestMethod.PUT)
+    public ResponseEntity<MessageEnvelope> activeOrInactiveRest(HttpServletRequest httpServletRequest,
+                                                                @RequestParam(value = "restId", required = false) Long restId) {
+        Locale locale = httpServletRequest.getLocale();
+
+        SpUser spUser = spUserService.getSpUser(httpServletRequest);
+
+        restaurantService.activeOrInactiveRest(restId,spUser,locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/rest/delete",method = RequestMethod.DELETE)
+    public ResponseEntity<MessageEnvelope> deleteRest(HttpServletRequest httpServletRequest,
+                                                      @RequestParam(value = "restId", required = false) Long restId) {
+        Locale locale = httpServletRequest.getLocale();
+
+        SpUser spUser = spUserService.getSpUser(httpServletRequest);
+
+        restaurantService.deleteRest(restId,spUser,locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 

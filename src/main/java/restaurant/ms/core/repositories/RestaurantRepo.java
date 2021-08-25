@@ -15,4 +15,5 @@ public interface RestaurantRepo extends CrudRepository<Restaurant,String> {
     public Restaurant findRestaurantById(Long id);
 
     Page<Restaurant> findAllBy(Pageable pageable);
+
 }

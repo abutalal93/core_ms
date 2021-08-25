@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import restaurant.ms.core.dto.requests.SpLoginRq;
 import restaurant.ms.core.dto.responses.RestUserLoginRs;
+import restaurant.ms.core.entities.Item;
 import restaurant.ms.core.entities.RestaurantUser;
 import restaurant.ms.core.entities.SpUser;
 import restaurant.ms.core.enums.Status;
@@ -86,24 +87,6 @@ public class RestUserService {
 
         if(restaurantUser.getStatus().equals(Status.DELETED)){
             throw new HttpServiceException(HttpStatus.BAD_REQUEST,"user_deleted",locale);
-        }
-
-        return restaurantUser;
-    }
-
-    public RestaurantUser findRestUserByUsername(String username,Locale locale){
-        RestaurantUser restaurantUser = restaurantUserRepo.findRestaurantUserByUsername(username);
-
-        if(restaurantUser == null){
-            throw new HttpServiceException(HttpStatus.BAD_REQUEST,"user_not_found",locale);
-        }
-
-        if (restaurantUser.getStatus().equals(Status.INACTIVE)) {
-            throw new HttpServiceException(HttpStatus.BAD_REQUEST, "user_inactive", locale);
-        }
-
-        if (restaurantUser.getStatus().equals(Status.DELETED)) {
-            throw new HttpServiceException(HttpStatus.BAD_REQUEST, "user_deleted", locale);
         }
 
         return restaurantUser;
