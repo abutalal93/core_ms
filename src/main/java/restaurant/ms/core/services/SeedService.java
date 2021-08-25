@@ -97,33 +97,33 @@ public class SeedService {
         zarqa.setRegion(centerRegion);
         cityRepo.save(zarqa);
 
-        City balqa = new City();
-        balqa.setCode("5");
-        balqa.setNameEn("Jarash");
-        balqa.setNameAr("البلقاء");
-        balqa.setRegion(centerRegion);
-        cityRepo.save(balqa);
-
         City madaba = new City();
-        madaba.setCode("6");
+        madaba.setCode("5");
         madaba.setNameEn("Madaba");
         madaba.setNameAr("مأدبا");
         madaba.setRegion(centerRegion);
         cityRepo.save(madaba);
 
         City mafraq = new City();
-        mafraq.setCode("7");
+        mafraq.setCode("6");
         mafraq.setNameEn("Mafraq");
         mafraq.setNameAr("المفرق");
         mafraq.setRegion(centerRegion);
         cityRepo.save(mafraq);
 
         City amman = new City();
-        amman.setCode("8");
+        amman.setCode("7");
         amman.setNameEn("Amman");
         amman.setNameAr("عمان");
         amman.setRegion(centerRegion);
         cityRepo.save(amman);
+
+        City balqa = new City();
+        balqa.setCode("8");
+        balqa.setNameEn("Balqaa");
+        balqa.setNameAr("البلقاء");
+        balqa.setRegion(centerRegion);
+        cityRepo.save(balqa);
 
         City karak = new City();
         karak.setCode("9");
@@ -155,57 +155,159 @@ public class SeedService {
 
         ////////////////////////////////////////////////
 
-        SpUser spUser = new SpUser();
-        spUser.setFirstName("Abdallah");
-        spUser.setLastName("Dabbas");
-        spUser.setCreateDate(LocalDateTime.now());
-        spUser.setMobileNumber(Utility.formatMobileNumber("0786789496"));
-        spUser.setEmail("adabbas@hotmail.com");
-        spUser.setUsername("adabbas");
-        spUser.setPassword(passwordEncoder.encode("Yewx44bn"));
-        spUser.setStatus(Status.ACTIVE);
+        SpUser abdallah = new SpUser();
+        abdallah.setFirstName("Abdallah");
+        abdallah.setLastName("Dabbas");
+        abdallah.setCreateDate(LocalDateTime.now());
+        abdallah.setMobileNumber(Utility.formatMobileNumber("0786789496"));
+        abdallah.setEmail("adabbas@hotmail.com");
+        abdallah.setUsername("adabbas");
+        abdallah.setPassword(passwordEncoder.encode("Yewx44bn"));
+        abdallah.setStatus(Status.ACTIVE);
 
-        spUserRepo.save(spUser);
+        spUserRepo.save(abdallah);
+
+        SpUser osama = new SpUser();
+        osama.setFirstName("Osama");
+        osama.setLastName("Bsharat");
+        osama.setCreateDate(LocalDateTime.now());
+        osama.setMobileNumber(Utility.formatMobileNumber("0786789496"));
+        osama.setEmail("bsharat@hotmail.com");
+        osama.setUsername("obsharat");
+        osama.setPassword(passwordEncoder.encode("Yewx44bn"));
+        osama.setStatus(Status.ACTIVE);
+
+        spUserRepo.save(osama);
+
+        SpUser maen = new SpUser();
+        maen.setFirstName("Maen");
+        maen.setLastName("Omari");
+        maen.setCreateDate(LocalDateTime.now());
+        maen.setMobileNumber(Utility.formatMobileNumber("0786789496"));
+        maen.setEmail("momari@hotmail.com");
+        maen.setUsername("momari");
+        maen.setPassword(passwordEncoder.encode("Yewx44bn"));
+        maen.setStatus(Status.ACTIVE);
+
+        spUserRepo.save(maen);
 
         ////////////////////////////////////////////////
 
-        Restaurant restaurant = new Restaurant();
-        restaurant.setCommercialRegister("9931065088");
-        restaurant.setBrandNameEn("Burger Maker");
-        restaurant.setBrandNameAr("برغر ميكر");
-        restaurant.setTaxNumber("00120210210");
-        restaurant.setLogo("https://www.abdalimall.com/images/stores/63648583538539629731065.jpg");
-        restaurant.setEmail("adabbas@bg.com");
-        restaurant.setMobileNumber(Utility.formatMobileNumber("0786789496"));
-        restaurant.setPhoneNumber("053812059");
-        restaurant.setRegion(centerRegion);
-        restaurant.setCity(amman);
-        restaurant.setStreetName("King Rania St");
-        restaurant.setBuildingNumber("15");
-        restaurant.setAddress("Amman, Madina monawara St , 52525");
-        restaurant.setRestaurantType(RestaurantType.RESTAURANT);
-        restaurant.setServiceType(ServiceType.HALL_TAKE_AWAY);
-        restaurant.setSpUser(spUser);
-        restaurant.setStatus(Status.ACTIVE);
-        restaurant.setCreateDate(LocalDateTime.now());
-        restaurant.setExpireDate(LocalDate.now().atStartOfDay().plusMonths(6));
+        Restaurant bm = new Restaurant();
+        bm.setCommercialRegister("9931065088");
+        bm.setBrandNameEn("Burger Maker");
+        bm.setBrandNameAr("برغر ميكر");
+        bm.setTaxNumber("00120210210");
+        bm.setLogo("https://www.abdalimall.com/images/stores/63648583538539629731065.jpg");
+        bm.setEmail("adabbas@bg.com");
+        bm.setMobileNumber(Utility.formatMobileNumber("0786789496"));
+        bm.setPhoneNumber("053812059");
+        bm.setRegion(centerRegion);
+        bm.setCity(amman);
+        bm.setStreetName("King Rania St");
+        bm.setBuildingNumber("15");
+        bm.setAddress("Amman, Madina monawara St , 52525");
+        bm.setRestaurantType(RestaurantType.RESTAURANT);
+        bm.setServiceType(ServiceType.HALL_TAKE_AWAY);
+        bm.setSpUser(abdallah);
+        bm.setStatus(Status.ACTIVE);
+        bm.setCreateDate(LocalDateTime.now());
+        bm.setExpireDate(LocalDate.now().atStartOfDay().plusMonths(6));
 
-        restaurantRepo.save(restaurant);
+        restaurantRepo.save(bm);
 
         ////////////////////////////////////////////////
-        RestaurantUser restaurantUser = new RestaurantUser();
-        restaurantUser.setRestaurant(restaurant);
-        restaurantUser.setFirstName("Abdallah");
-        restaurantUser.setLastName("Dabbas");
-        restaurantUser.setCreateDate(LocalDateTime.now());
-        restaurantUser.setRestaurantUserType(RestaurantUserType.SUPER_ADMIN);
-        restaurantUser.setEmail("adabbas@bg.com");
-        restaurantUser.setMobileNumber("0786789496");
-        restaurantUser.setPassword(passwordEncoder.encode("Yewx44bn"));
-        restaurantUser.setUsername("adabbas");
-        restaurantUser.setStatus(Status.ACTIVE);
+        RestaurantUser restaurantUserAbd = new RestaurantUser();
+        restaurantUserAbd.setRestaurant(bm);
+        restaurantUserAbd.setFirstName("Abdallah");
+        restaurantUserAbd.setLastName("Dabbas");
+        restaurantUserAbd.setCreateDate(LocalDateTime.now());
+        restaurantUserAbd.setRestaurantUserType(RestaurantUserType.SUPER_ADMIN);
+        restaurantUserAbd.setEmail("adabbas@bg.com");
+        restaurantUserAbd.setMobileNumber("0786789496");
+        restaurantUserAbd.setPassword(passwordEncoder.encode("Yewx44bn"));
+        restaurantUserAbd.setUsername("adabbas");
+        restaurantUserAbd.setStatus(Status.ACTIVE);
 
-        restaurantUserRepo.save(restaurantUser);
+        restaurantUserRepo.save(restaurantUserAbd);
+
+        ////////////////////////////////////////////////
+
+        Restaurant ff = new Restaurant();
+        ff.setCommercialRegister("9931065088");
+        ff.setBrandNameEn("Firefly Burger");
+        ff.setBrandNameAr("فايرفلاي ميكر");
+        ff.setTaxNumber("00120210210");
+        ff.setLogo("https://lh3.googleusercontent.com/proxy/yXggF2YrQWPYb6ptrUMkaSBcaJdbarnAaRA3nLHLC_GWYn6MVFm2JAvmLKmgXBAcv1xX7B58Amym_DyKWjVJris7Q6eL");
+        ff.setEmail("onsharat@ff.com");
+        ff.setMobileNumber(Utility.formatMobileNumber("0786789496"));
+        ff.setPhoneNumber("053812059");
+        ff.setRegion(centerRegion);
+        ff.setCity(amman);
+        ff.setStreetName("King Rania St");
+        ff.setBuildingNumber("15");
+        ff.setAddress("Amman, Madina monawara St , 52525");
+        ff.setRestaurantType(RestaurantType.RESTAURANT);
+        ff.setServiceType(ServiceType.HALL_TAKE_AWAY);
+        ff.setSpUser(abdallah);
+        ff.setStatus(Status.ACTIVE);
+        ff.setCreateDate(LocalDateTime.now());
+        ff.setExpireDate(LocalDate.now().atStartOfDay().plusMonths(6));
+
+        restaurantRepo.save(ff);
+
+        ////////////////////////////////////////////////
+        RestaurantUser restaurantUserOs = new RestaurantUser();
+        restaurantUserOs.setRestaurant(ff);
+        restaurantUserOs.setFirstName("Osama");
+        restaurantUserOs.setLastName("Bsharat");
+        restaurantUserOs.setCreateDate(LocalDateTime.now());
+        restaurantUserOs.setRestaurantUserType(RestaurantUserType.SUPER_ADMIN);
+        restaurantUserOs.setEmail("obsharat@ff.com");
+        restaurantUserOs.setMobileNumber("0786789496");
+        restaurantUserOs.setPassword(passwordEncoder.encode("Yewx44bn"));
+        restaurantUserOs.setUsername("obsharat");
+        restaurantUserOs.setStatus(Status.ACTIVE);
+
+        restaurantUserRepo.save(restaurantUserOs);
+
+        Restaurant kfc = new Restaurant();
+        kfc.setCommercialRegister("9931065088");
+        kfc.setBrandNameEn("KFC");
+        ff.setBrandNameAr("دجاج كنتاكي");
+        kfc.setTaxNumber("00120210210");
+        kfc.setLogo("https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/KFC_Logo.svg/640px-KFC_Logo.svg.png");
+        kfc.setEmail("onsharat@ff.com");
+        kfc.setMobileNumber(Utility.formatMobileNumber("0786789496"));
+        kfc.setPhoneNumber("053812059");
+        kfc.setRegion(centerRegion);
+        kfc.setCity(amman);
+        kfc.setStreetName("King Rania St");
+        kfc.setBuildingNumber("15");
+        kfc.setAddress("Amman, Madina monawara St , 52525");
+        kfc.setRestaurantType(RestaurantType.RESTAURANT);
+        kfc.setServiceType(ServiceType.HALL_TAKE_AWAY);
+        kfc.setSpUser(abdallah);
+        kfc.setStatus(Status.ACTIVE);
+        kfc.setCreateDate(LocalDateTime.now());
+        kfc.setExpireDate(LocalDate.now().atStartOfDay().plusMonths(6));
+
+        restaurantRepo.save(kfc);
+
+        ////////////////////////////////////////////////
+        RestaurantUser restaurantUserKfc= new RestaurantUser();
+        restaurantUserKfc.setRestaurant(kfc);
+        restaurantUserKfc.setFirstName("Maen");
+        restaurantUserKfc.setLastName("Omari");
+        restaurantUserKfc.setCreateDate(LocalDateTime.now());
+        restaurantUserKfc.setRestaurantUserType(RestaurantUserType.SUPER_ADMIN);
+        restaurantUserKfc.setEmail("momari@ff.com");
+        restaurantUserKfc.setMobileNumber("0786789496");
+        restaurantUserKfc.setPassword(passwordEncoder.encode("Yewx44bn"));
+        restaurantUserKfc.setUsername("momari");
+        restaurantUserKfc.setStatus(Status.ACTIVE);
+
+        restaurantUserRepo.save(restaurantUserKfc);
 
 
 
