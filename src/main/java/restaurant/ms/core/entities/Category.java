@@ -4,6 +4,7 @@ package restaurant.ms.core.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import restaurant.ms.core.dto.responses.CategoryInfoRs;
 import restaurant.ms.core.dto.responses.CategorySearchRs;
 import restaurant.ms.core.dto.responses.QrSearchRs;
 import restaurant.ms.core.enums.Status;
@@ -59,6 +60,19 @@ public class Category {
         categorySearchRs.setId(this.id);
 
         return categorySearchRs;
+    }
+
+    public CategoryInfoRs toCategoryInfoRs(){
+        CategoryInfoRs categoryInfoRs = new CategoryInfoRs();
+
+        categoryInfoRs.setAvatar(this.avatar);
+        categoryInfoRs.setNameEn(this.nameEn);
+        categoryInfoRs.setNameAr(this.nameAr);
+        categoryInfoRs.setCode(this.code);
+        categoryInfoRs.setStatus(this.status.name());
+        categoryInfoRs.setId(this.id);
+
+        return categoryInfoRs;
     }
 
     public String getName(Locale locale){

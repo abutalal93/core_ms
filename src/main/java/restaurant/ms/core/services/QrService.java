@@ -12,15 +12,12 @@ import restaurant.ms.core.dto.requests.QrCreateRq;
 import restaurant.ms.core.dto.requests.QrUpdateRq;
 import restaurant.ms.core.dto.requests.RestaurantCreateRq;
 import restaurant.ms.core.dto.requests.RestaurantUpdateRq;
-import restaurant.ms.core.dto.responses.PageRs;
-import restaurant.ms.core.dto.responses.QrSearchRs;
-import restaurant.ms.core.dto.responses.RestaurantSearchRs;
-import restaurant.ms.core.entities.Qr;
-import restaurant.ms.core.entities.Restaurant;
-import restaurant.ms.core.entities.RestaurantUser;
-import restaurant.ms.core.entities.SpUser;
+import restaurant.ms.core.dto.responses.*;
+import restaurant.ms.core.entities.*;
 import restaurant.ms.core.enums.Status;
 import restaurant.ms.core.exceptions.HttpServiceException;
+import restaurant.ms.core.repositories.CategoryRepo;
+import restaurant.ms.core.repositories.ItemRepo;
 import restaurant.ms.core.repositories.QrRepo;
 import restaurant.ms.core.repositories.RestaurantRepo;
 
@@ -39,6 +36,12 @@ public class QrService {
 
     @Value("${qrUrl}")
     private String qrUrl;
+
+    @Autowired
+    private CategoryRepo categoryRepo;
+
+    @Autowired
+    private ItemRepo itemRepo;
 
     public PageRs searchQr(Integer page, Integer size, Locale locale) {
         if (page == null)
@@ -126,6 +129,58 @@ public class QrService {
         qr.setStatus(Status.DELETED);
 
         qrRepo.save(qr);
+    }
+
+
+    public QrInfoRs qrInfo(Long qrId, Locale locale) {
+
+        Qr qr = qrRepo.findQrById(qrId);
+
+        if(qr == null){
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST,"QR not found",locale);
+        }
+
+        if(qr.getStatus().equals(Status.DELETED)){
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST,"QR not found",locale);
+        }
+
+        QrInfoRs qrInfoRs = new QrInfoRs();
+        qrInfoRs.setId(qrId);
+        qrInfoRs.setBrandName(qr.getRestaurant().getBrandNameEn());
+        qrInfoRs.setLogo(qr.getRestaurant().getLogo());
+        qrInfoRs.setCategoryList(categoryInfo(qr,locale));
+
+        return qrInfoRs;
+    }
+
+    public List<CategoryInfoRs> categoryInfo(Qr qr, Locale locale){
+
+        List<Category> categoryList = categoryRepo.findCategoryByRestaurant_idAndStatus(qr.getRestaurant().getId(), Status.ACTIVE);
+
+        if(categoryList == null){
+            return null;
+        }
+
+        List<CategoryInfoRs> categoryInfoRsList = categoryList.stream()
+                .map(category -> category.toCategoryInfoRs())
+                .collect(Collectors.toList());
+
+        for(CategoryInfoRs categoryInfoRs: categoryInfoRsList){
+
+            List<Item> itemList = itemRepo.findItemByCategory_IdAndStatus(categoryInfoRs.getId(),Status.ACTIVE);
+
+            if(itemList == null){
+                continue;
+            }
+
+            List<ItemInfoRs> itemInfoRsList = itemList.stream()
+                    .map(item -> item.toItemInfoRs())
+                    .collect(Collectors.toList());
+
+            categoryInfoRs.setItemList(itemInfoRsList);
+        }
+
+        return categoryInfoRsList;
     }
 
 }

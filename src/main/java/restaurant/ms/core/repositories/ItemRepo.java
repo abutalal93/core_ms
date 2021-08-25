@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import restaurant.ms.core.entities.Item;
 import restaurant.ms.core.entities.Item;
+import restaurant.ms.core.enums.Status;
 
 import java.util.List;
 
@@ -16,6 +17,8 @@ public interface ItemRepo extends CrudRepository<Item,String> {
     @Query("select item from Item item where item.status <>'DELETED'")
     Page<Item> findAllBy(Pageable pageable);
 
+
+    public List<Item> findItemByCategory_IdAndStatus(Long categoryId, Status status);
 
     public Item findItemById(Long itemId);
 }
