@@ -68,6 +68,12 @@ public class QrService {
 
     public void createQr(QrCreateRq qrCreateRq, RestaurantUser restaurantUser, Locale locale) {
 
+        Qr currentQr = qrRepo.findQrRest(qrCreateRq.getAlias());
+
+        if(currentQr != null){
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST,"QR alias already exist",locale);
+        }
+
         Qr qr = new Qr();
         qr.setCreateDate(LocalDateTime.now());
         qr.setRestaurant(restaurantUser.getRestaurant());

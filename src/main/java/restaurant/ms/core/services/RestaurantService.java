@@ -19,9 +19,11 @@ import restaurant.ms.core.entities.Item;
 import restaurant.ms.core.entities.Restaurant;
 import restaurant.ms.core.entities.RestaurantUser;
 import restaurant.ms.core.entities.SpUser;
+import restaurant.ms.core.enums.RestaurantUserType;
 import restaurant.ms.core.enums.Status;
 import restaurant.ms.core.exceptions.HttpServiceException;
 import restaurant.ms.core.repositories.RestaurantRepo;
+import restaurant.ms.core.repositories.RestaurantUserRepo;
 import restaurant.ms.core.repositories.SpUserRepo;
 import restaurant.ms.core.security.JwtTokenProvider;
 import restaurant.ms.core.security.JwtUser;
@@ -40,6 +42,13 @@ public class RestaurantService {
 
     @Autowired
     private RestaurantRepo restaurantRepo;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RestaurantUserRepo restaurantUserRepo;
+
 
     public PageRs searchRestaurant(Integer page,Integer size, Locale locale){
         if (page == null)
@@ -66,12 +75,34 @@ public class RestaurantService {
 
     public void createRestaurant(RestaurantCreateRq restaurantCreateRq,SpUser spUser, Locale locale){
 
+        Restaurant currentRest = restaurantRepo.findRestaurant(restaurantCreateRq.getCommercialRegister());
+
+        if(currentRest != null){
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST,"Commercial Register already exist");
+        }
+
         Restaurant restaurant = restaurantCreateRq.toRestaurant();
         restaurant.setCreateDate(LocalDateTime.now());
         restaurant.setExpireDate(LocalDateTime.now().plusMonths(6));
         restaurant.setSpUser(spUser);
 
         restaurantRepo.save(restaurant);
+
+        RestaurantUser restaurantUser = new RestaurantUser();
+        restaurantUser.setRestaurant(restaurant);
+        restaurantUser.setFirstName(restaurant.getAuthorizedFirstName());
+        restaurantUser.setSecondName(restaurant.getAuthorizedSecondName());
+        restaurantUser.setThirdName(restaurant.getAuthorizedThirdName());
+        restaurantUser.setLastName(restaurant.getAuthorizedLastName());
+        restaurantUser.setMobileNumber(restaurant.getAuthorizedMobileNumber());
+        restaurantUser.setEmail(restaurant.getAuthorizedEmail());
+        restaurantUser.setUsername(restaurant.getCommercialRegister());
+        restaurantUser.setRestaurantUserType(RestaurantUserType.SUPER_ADMIN);
+        restaurantUser.setStatus(Status.ACTIVE);
+        restaurantUser.setCreateDate(LocalDateTime.now());
+        restaurantUser.setPassword(passwordEncoder.encode("Yewx44bn"));
+
+        restaurantUserRepo.save(restaurantUser);
     }
 
     public void updateRestaurant(RestaurantUpdateRq restaurantUpdateRq, SpUser spUser, Locale locale){

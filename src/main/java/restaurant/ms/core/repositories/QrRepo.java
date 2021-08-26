@@ -19,4 +19,7 @@ public interface QrRepo extends CrudRepository<Qr,String> {
 
 
     public Qr findQrById(Long qrId);
+
+    @Query("select qr from Qr qr where qr.status <>'DELETED' and qr.alias=:alias")
+    public Qr findQrRest(@Param("alias") String alias);
 }
