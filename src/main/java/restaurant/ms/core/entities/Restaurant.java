@@ -122,6 +122,7 @@ public class Restaurant {
     public RestaurantSearchRs toRestaurantSearchRs(){
         RestaurantSearchRs restaurantSearchRs = new RestaurantSearchRs();
 
+        restaurantSearchRs.setId(this.id);
         restaurantSearchRs.setBrandNameEn(this.brandNameEn);
         restaurantSearchRs.setBrandNameAr(this.brandNameAr);
         restaurantSearchRs.setCommercialRegister(this.commercialRegister);

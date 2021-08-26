@@ -10,6 +10,7 @@ import restaurant.ms.core.entities.Restaurant;
 @NoArgsConstructor
 public class RestaurantSearchRs {
 
+    private Long id;
     private String commercialRegister;
     private String brandNameEn;
     private String brandNameAr;
