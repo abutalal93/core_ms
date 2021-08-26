@@ -10,4 +10,6 @@ public interface CityRepo extends CrudRepository<City,String> {
     public List<City> findAll();
 
     public List<City> findCityByRegion_Id(Long id);
+
+    public City findCityById(Long id);
 }

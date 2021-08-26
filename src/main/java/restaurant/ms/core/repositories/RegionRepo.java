@@ -1,6 +1,7 @@
 package restaurant.ms.core.repositories;
 
 import org.springframework.data.repository.CrudRepository;
+import restaurant.ms.core.entities.City;
 import restaurant.ms.core.entities.Region;
 
 import java.util.List;
@@ -8,4 +9,7 @@ import java.util.List;
 public interface RegionRepo extends CrudRepository<Region,String> {
 
     public List<Region> findAll();
+
+    public Region findRegionById(Long id);
+
 }

@@ -15,16 +15,13 @@ import restaurant.ms.core.dto.requests.SpLoginRq;
 import restaurant.ms.core.dto.responses.PageRs;
 import restaurant.ms.core.dto.responses.RestaurantSearchRs;
 import restaurant.ms.core.dto.responses.SpLoginRs;
-import restaurant.ms.core.entities.Item;
-import restaurant.ms.core.entities.Restaurant;
-import restaurant.ms.core.entities.RestaurantUser;
-import restaurant.ms.core.entities.SpUser;
+import restaurant.ms.core.entities.*;
+import restaurant.ms.core.enums.RestaurantType;
 import restaurant.ms.core.enums.RestaurantUserType;
+import restaurant.ms.core.enums.ServiceType;
 import restaurant.ms.core.enums.Status;
 import restaurant.ms.core.exceptions.HttpServiceException;
-import restaurant.ms.core.repositories.RestaurantRepo;
-import restaurant.ms.core.repositories.RestaurantUserRepo;
-import restaurant.ms.core.repositories.SpUserRepo;
+import restaurant.ms.core.repositories.*;
 import restaurant.ms.core.security.JwtTokenProvider;
 import restaurant.ms.core.security.JwtUser;
 import restaurant.ms.core.utils.BeanConverter;
@@ -48,6 +45,15 @@ public class RestaurantService {
 
     @Autowired
     private RestaurantUserRepo restaurantUserRepo;
+
+    @Autowired
+    private RegionRepo regionRepo;
+
+    @Autowired
+    private CityRepo cityRepo;
+
+    @Autowired
+    private DistrictRepo districtRepo;
 
 
     public PageRs searchRestaurant(Integer page,Integer size, Locale locale){
@@ -85,8 +91,13 @@ public class RestaurantService {
         restaurant.setCreateDate(LocalDateTime.now());
         restaurant.setExpireDate(LocalDateTime.now().plusMonths(6));
         restaurant.setSpUser(spUser);
+        restaurant.setRegion(regionRepo.findRegionById(restaurantCreateRq.getRegionId()));
+        restaurant.setCity(cityRepo.findCityById(restaurantCreateRq.getCityId()));
+        restaurant.setDistrict(districtRepo.findDistinctById(restaurantCreateRq.getDistrictId()));
+        restaurant.setServiceType(ServiceType.HALL_TAKE_AWAY);
+        restaurant.setRestaurantType(RestaurantType.RESTAURANT_COFFEE);
 
-        restaurantRepo.save(restaurant);
+        restaurant = restaurantRepo.save(restaurant);
 
         RestaurantUser restaurantUser = new RestaurantUser();
         restaurantUser.setRestaurant(restaurant);
