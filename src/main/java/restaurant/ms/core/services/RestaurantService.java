@@ -96,6 +96,7 @@ public class RestaurantService {
         restaurant.setDistrict(districtRepo.findDistinctById(restaurantCreateRq.getDistrictId()));
         restaurant.setServiceType(ServiceType.HALL_TAKE_AWAY);
         restaurant.setRestaurantType(RestaurantType.RESTAURANT_COFFEE);
+        restaurant.setStatus(Status.ACTIVE);
 
         restaurant = restaurantRepo.save(restaurant);
 
