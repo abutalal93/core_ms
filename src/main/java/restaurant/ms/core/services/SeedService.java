@@ -238,7 +238,7 @@ public class SeedService {
         ff.setBrandNameEn("Firefly Burger");
         ff.setBrandNameAr("فايرفلاي ميكر");
         ff.setTaxNumber("00120210210");
-        ff.setLogo("https://lh3.googleusercontent.com/proxy/yXggF2YrQWPYb6ptrUMkaSBcaJdbarnAaRA3nLHLC_GWYn6MVFm2JAvmLKmgXBAcv1xX7B58Amym_DyKWjVJris7Q6eL");
+        ff.setLogo("https://is4-ssl.mzstatic.com/image/thumb/Purple125/v4/15/79/76/15797642-84c1-e07d-90f0-805eabec2cbc/AppIcon-0-0-1x_U007emarketing-0-0-0-10-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/600x600wa.png");
         ff.setEmail("onsharat@ff.com");
         ff.setMobileNumber(Utility.formatMobileNumber("0786789496"));
         ff.setPhoneNumber("053812059");
