@@ -20,6 +20,18 @@ public interface CategoryRepo extends CrudRepository<Category,String> {
     @Query("select category from Category category where category.status <>'DELETED' and category.restaurant=:restaurant")
     Page<Category> findAllBy(@Param("restaurant") Restaurant restaurant, Pageable pageable);
 
+    @Query("select category from Category category " +
+            "where category.status <>'DELETED' " +
+            "and category.restaurant=:restaurant " +
+            "and category.nameEn=:nameEn")
+    List<Category> findCategoryNameEn(@Param("restaurant") Restaurant restaurant,@Param("nameEn") String nameEn);
+
+    @Query("select category from Category category " +
+            "where category.status <>'DELETED' " +
+            "and category.restaurant=:restaurant " +
+            "and category.nameAr=:nameAr")
+    List<Category> findCategoryNameAr(@Param("restaurant") Restaurant restaurant,@Param("nameAr") String nameAr);
+
 
     public Category findCategoryById(Long categoryId);
 }

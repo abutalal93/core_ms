@@ -10,7 +10,6 @@ import lombok.Setter;
 public class CategoryUpdateRq {
 
     private Long categoryId;
-    private String code;
     private String nameEn;
     private String nameAr;
     private String status;

@@ -119,6 +119,12 @@ public class Restaurant {
     @Column(name = "authorized_email")
     private String authorizedEmail;
 
+    @Column(name = "category_sequence")
+    private Long categorySequence;
+
+    @Column(name = "item_sequence")
+    private Long itemSequence;
+
     public RestaurantSearchRs toRestaurantSearchRs(){
         RestaurantSearchRs restaurantSearchRs = new RestaurantSearchRs();
 

@@ -15,7 +15,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ItemCreateRq {
 
-    private String code;
     private String nameEn;
     private String nameAr;
     private String avatar;

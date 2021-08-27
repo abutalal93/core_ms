@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 public class ItemUpdateRq {
 
     private Long itemId;
-    private String code;
     private String nameEn;
     private String nameAr;
     private String avatar;

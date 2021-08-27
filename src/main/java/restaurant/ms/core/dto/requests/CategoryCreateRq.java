@@ -9,7 +9,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CategoryCreateRq {
 
-    private String code;
     private String nameEn;
     private String nameAr;
     private String status;

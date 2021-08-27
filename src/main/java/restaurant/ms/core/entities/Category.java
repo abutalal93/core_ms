@@ -13,7 +13,10 @@ import javax.persistence.*;
 import java.util.Locale;
 
 @Entity
-@Table(name = "category")
+@Table(name = "category",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "RestIdWithNameEn", columnNames = {"restaurant_id", "name_en"}),
+                @UniqueConstraint(name = "RestIdWithNameAr", columnNames = {"restaurant_id", "name_ar"})})
 @Setter
 @Getter
 @NoArgsConstructor

@@ -13,10 +13,12 @@ import restaurant.ms.core.dto.requests.CategoryUpdateRq;
 import restaurant.ms.core.dto.responses.PageRs;
 import restaurant.ms.core.dto.responses.CategorySearchRs;
 import restaurant.ms.core.entities.Category;
+import restaurant.ms.core.entities.Restaurant;
 import restaurant.ms.core.entities.RestaurantUser;
 import restaurant.ms.core.enums.Status;
 import restaurant.ms.core.exceptions.HttpServiceException;
 import restaurant.ms.core.repositories.CategoryRepo;
+import restaurant.ms.core.repositories.RestaurantRepo;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -30,6 +32,9 @@ public class CategoryService {
 
     @Autowired
     private CategoryRepo categoryRepo;
+
+    @Autowired
+    private RestaurantRepo restaurantRepo;
 
 
     public PageRs searchCategory(RestaurantUser restaurantUser,Integer page, Integer size, Locale locale) {
@@ -57,8 +62,16 @@ public class CategoryService {
 
     public void createCategory(CategoryCreateRq categoryCreateRq, RestaurantUser restaurantUser, Locale locale) {
 
+        Long currentCategorySequence = restaurantUser.getRestaurant().getCategorySequence();
+
+        if(currentCategorySequence == null){
+            currentCategorySequence = 0L;
+        }
+
+        currentCategorySequence += 1;
+
         Category category = new Category();
-        category.setCode(categoryCreateRq.getCode());
+        category.setCode(currentCategorySequence+"");
         category.setNameAr(categoryCreateRq.getNameAr());
         category.setNameEn(categoryCreateRq.getNameEn());
         category.setAvatar(categoryCreateRq.getAvatar());
@@ -66,13 +79,15 @@ public class CategoryService {
         category.setStatus(Status.ACTIVE);
 
         categoryRepo.save(category);
+
+        restaurantUser.getRestaurant().setCategorySequence(currentCategorySequence);
+        restaurantRepo.save(restaurantUser.getRestaurant());
     }
 
     public void updateCategory(CategoryUpdateRq categoryUpdateRq, RestaurantUser restaurantUser, Locale locale) {
 
         Category category = new Category();
         category.setId(categoryUpdateRq.getCategoryId());
-        category.setCode(categoryUpdateRq.getCode());
         category.setNameAr(categoryUpdateRq.getNameAr());
         category.setNameEn(categoryUpdateRq.getNameEn());
         category.setAvatar(categoryUpdateRq.getAvatar());

@@ -17,6 +17,7 @@ import restaurant.ms.core.entities.RestaurantUser;
 import restaurant.ms.core.enums.Status;
 import restaurant.ms.core.exceptions.HttpServiceException;
 import restaurant.ms.core.repositories.ItemRepo;
+import restaurant.ms.core.repositories.RestaurantRepo;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -30,6 +31,8 @@ public class ItemService {
     @Autowired
     private ItemRepo itemRepo;
 
+    @Autowired
+    private RestaurantRepo restaurantRepo;
 
     public PageRs searchItem(RestaurantUser restaurantUser,Integer page, Integer size, Locale locale) {
         if (page == null)
@@ -56,8 +59,16 @@ public class ItemService {
 
     public void createItem(ItemCreateRq itemCreateRq, RestaurantUser restaurantUser, Locale locale) {
 
+        Long currentItemSequence = restaurantUser.getRestaurant().getCategorySequence();
+
+        if(currentItemSequence == null){
+            currentItemSequence = 0L;
+        }
+
+        currentItemSequence += 1;
+
         Item item = new Item();
-        item.setCode(itemCreateRq.getCode());
+        item.setCode(currentItemSequence+"");
         item.setNameAr(itemCreateRq.getNameAr());
         item.setNameEn(itemCreateRq.getNameEn());
         item.setAvatar(itemCreateRq.getAvatar());
@@ -67,13 +78,15 @@ public class ItemService {
         item.setCategory(new Category(itemCreateRq.getCategoryId()));
 
         itemRepo.save(item);
+
+        restaurantUser.getRestaurant().setCategorySequence(currentItemSequence);
+        restaurantRepo.save(restaurantUser.getRestaurant());
     }
 
     public void updateItem(ItemUpdateRq itemUpdateRq, RestaurantUser restaurantUser, Locale locale) {
 
         Item item = new Item();
         item.setId(itemUpdateRq.getItemId());
-        item.setCode(itemUpdateRq.getCode());
         item.setNameAr(itemUpdateRq.getNameAr());
         item.setNameEn(itemUpdateRq.getNameEn());
         item.setAvatar(itemUpdateRq.getAvatar());
