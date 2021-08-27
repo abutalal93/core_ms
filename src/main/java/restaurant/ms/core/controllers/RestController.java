@@ -1,6 +1,7 @@
 package restaurant.ms.core.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import restaurant.ms.core.dto.responses.RestUserLoginRs;
 import restaurant.ms.core.dto.responses.SpLoginRs;
 import restaurant.ms.core.entities.RestaurantUser;
 import restaurant.ms.core.entities.SpUser;
+import restaurant.ms.core.exceptions.HttpServiceException;
 import restaurant.ms.core.repositories.RestaurantUserRepo;
 import restaurant.ms.core.services.*;
 
@@ -166,7 +168,19 @@ public class RestController {
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        categoryService.createCategory(categoryCreateRq,restaurantUser,locale);
+        try {
+            categoryService.createCategory(categoryCreateRq,restaurantUser,locale);
+        }catch (DataIntegrityViolationException ex){
+            String message = ex.getMessage();
+
+            if(message != null && message.contains("categoryrestidwithnameen")){
+                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in english already exist", locale);
+            }
+
+            if(message != null && message.contains("categoryrestidwithnamear")){
+                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in arabic already exist", locale);
+            }
+        }
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 
@@ -241,7 +255,19 @@ public class RestController {
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        itemService.createItem(itemCreateRq,restaurantUser,locale);
+        try {
+            itemService.createItem(itemCreateRq,restaurantUser,locale);
+        }catch (DataIntegrityViolationException ex){
+            String message = ex.getMessage();
+
+            if(message != null && message.contains("itemrestidwithnameen")){
+                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in english already exist", locale);
+            }
+
+            if(message != null && message.contains("itemrestidwithnamear")){
+                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in arabic already exist", locale);
+            }
+        }
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 

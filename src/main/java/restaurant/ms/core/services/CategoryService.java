@@ -80,20 +80,7 @@ public class CategoryService {
         category.setRestaurant(restaurantUser.getRestaurant());
         category.setStatus(Status.ACTIVE);
 
-        try {
-            categoryRepo.save(category);
-        }catch (DataIntegrityViolationException ex){
-            String message = ex.getMessage();
-
-            if(message != null && message.contains("categoryrestidwithnameen")){
-                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in english already exist", locale);
-            }
-
-            if(message != null && message.contains("categoryrestidwithnamear")){
-                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in arabic already exist", locale);
-            }
-        }
-
+        categoryRepo.save(category);
 
         restaurantUser.getRestaurant().setCategorySequence(currentCategorySequence);
         restaurantRepo.save(restaurantUser.getRestaurant());

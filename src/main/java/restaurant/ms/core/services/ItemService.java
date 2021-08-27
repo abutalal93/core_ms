@@ -80,19 +80,9 @@ public class ItemService {
         item.setUnitPrice(itemCreateRq.getUnitPrice());
         item.setCategory(new Category(itemCreateRq.getCategoryId()));
 
-        try {
-            itemRepo.save(item);
-        }catch (DataIntegrityViolationException ex){
-            String message = ex.getMessage();
 
-            if(message != null && message.contains("itemrestidwithnameen")){
-                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in english already exist", locale);
-            }
+        itemRepo.save(item);
 
-            if(message != null && message.contains("itemrestidwithnamear")){
-                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in arabic already exist", locale);
-            }
-        }
 
         restaurantUser.getRestaurant().setCategorySequence(currentItemSequence);
         restaurantRepo.save(restaurantUser.getRestaurant());
