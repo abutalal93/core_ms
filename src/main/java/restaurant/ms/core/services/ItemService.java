@@ -62,7 +62,7 @@ public class ItemService {
 
     public void createItem(ItemCreateRq itemCreateRq, RestaurantUser restaurantUser, Locale locale) {
 
-        Long currentItemSequence = restaurantUser.getRestaurant().getCategorySequence();
+        Long currentItemSequence = restaurantUser.getRestaurant().getItemSequence();
 
         if(currentItemSequence == null){
             currentItemSequence = 0L;
@@ -84,13 +84,13 @@ public class ItemService {
         itemRepo.save(item);
 
 
-        restaurantUser.getRestaurant().setCategorySequence(currentItemSequence);
+        restaurantUser.getRestaurant().setItemSequence(currentItemSequence);
         restaurantRepo.save(restaurantUser.getRestaurant());
     }
 
     public void updateItem(ItemUpdateRq itemUpdateRq, RestaurantUser restaurantUser, Locale locale) {
 
-        Item currentItem = itemRepo.findItemById(itemUpdateRq.getCategoryId());
+        Item currentItem = itemRepo.findItemById(itemUpdateRq.getItemId());
 
         Item item = new Item();
         item.setId(itemUpdateRq.getItemId());
