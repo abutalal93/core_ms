@@ -1,6 +1,9 @@
 package restaurant.ms.core.services;
 
+import org.hibernate.exception.ConstraintViolationException;
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -77,7 +80,19 @@ public class ItemService {
         item.setUnitPrice(itemCreateRq.getUnitPrice());
         item.setCategory(new Category(itemCreateRq.getCategoryId()));
 
-        itemRepo.save(item);
+        try {
+            itemRepo.save(item);
+        }catch (DataIntegrityViolationException ex){
+            String message = ex.getMessage();
+
+            if(message != null && message.contains("itemrestidwithnameen")){
+                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in english already exist", locale);
+            }
+
+            if(message != null && message.contains("itemrestidwithnamear")){
+                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in arabic already exist", locale);
+            }
+        }
 
         restaurantUser.getRestaurant().setCategorySequence(currentItemSequence);
         restaurantRepo.save(restaurantUser.getRestaurant());

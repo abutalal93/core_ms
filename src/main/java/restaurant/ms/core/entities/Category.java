@@ -15,8 +15,8 @@ import java.util.Locale;
 @Entity
 @Table(name = "category",
         uniqueConstraints = {
-                @UniqueConstraint(name = "RestIdWithNameEn", columnNames = {"restaurant_id", "name_en"}),
-                @UniqueConstraint(name = "RestIdWithNameAr", columnNames = {"restaurant_id", "name_ar"})})
+                @UniqueConstraint(name = "CategoryRestIdWithNameEn", columnNames = {"restaurant_id", "name_en"}),
+                @UniqueConstraint(name = "CategoryRestIdWithNameAr", columnNames = {"restaurant_id", "name_ar"})})
 @Setter
 @Getter
 @NoArgsConstructor
