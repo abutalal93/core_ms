@@ -88,8 +88,11 @@ public class CategoryService {
 
     public void updateCategory(CategoryUpdateRq categoryUpdateRq, RestaurantUser restaurantUser, Locale locale) {
 
+        Category currentCategory = categoryRepo.findCategoryById(categoryUpdateRq.getCategoryId());
+
         Category category = new Category();
         category.setId(categoryUpdateRq.getCategoryId());
+        category.setCode(currentCategory.getCode());
         category.setNameAr(categoryUpdateRq.getNameAr());
         category.setNameEn(categoryUpdateRq.getNameEn());
         category.setAvatar(categoryUpdateRq.getAvatar());

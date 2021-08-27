@@ -90,8 +90,11 @@ public class ItemService {
 
     public void updateItem(ItemUpdateRq itemUpdateRq, RestaurantUser restaurantUser, Locale locale) {
 
+        Item currentItem = itemRepo.findItemById(itemUpdateRq.getCategoryId());
+
         Item item = new Item();
         item.setId(itemUpdateRq.getItemId());
+        item.setCode(currentItem.getCode());
         item.setNameAr(itemUpdateRq.getNameAr());
         item.setNameEn(itemUpdateRq.getNameEn());
         item.setAvatar(itemUpdateRq.getAvatar());
