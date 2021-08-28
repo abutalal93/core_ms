@@ -79,6 +79,7 @@ public class ItemService {
         item.setStatus(Status.ACTIVE);
         item.setUnitPrice(itemCreateRq.getUnitPrice());
         item.setCategory(new Category(itemCreateRq.getCategoryId()));
+        item.setDescription(itemCreateRq.getDescription());
 
 
         itemRepo.save(item);
@@ -100,7 +101,9 @@ public class ItemService {
         item.setAvatar(itemUpdateRq.getAvatar());
         item.setRestaurant(restaurantUser.getRestaurant());
         item.setStatus(Status.ACTIVE);
-
+        item.setUnitPrice(itemUpdateRq.getUnitPrice());
+        item.setCategory(new Category(itemUpdateRq.getCategoryId()));
+        item.setDescription(itemUpdateRq.getDescription());
         itemRepo.save(item);
     }
 

@@ -180,6 +180,8 @@ public class RestController {
             if(message != null && message.contains("categoryrestidwithnamear")){
                 throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in arabic already exist", locale);
             }
+
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST, "ٍSomething wrong, please contact system administrator", locale);
         }
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
@@ -267,6 +269,8 @@ public class RestController {
             if(message != null && message.contains("itemrestidwithnamear")){
                 throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in arabic already exist", locale);
             }
+
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST, "ٍSomething wrong, please contact system administrator", locale);
         }
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
