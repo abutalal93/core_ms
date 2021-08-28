@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import restaurant.ms.core.dto.requests.ChangeRestUserPasswordRq;
 import restaurant.ms.core.dto.requests.RestUserCreateRq;
 import restaurant.ms.core.dto.requests.RestUserUpdateRq;
 import restaurant.ms.core.dto.requests.SpLoginRq;
@@ -163,6 +164,13 @@ public class RestUserService {
         restUser.setPassword(currentRestUser.getPassword());
 
         restaurantUserRepo.save(restUser);
+    }
+
+    public void changeRestUserPassword(ChangeRestUserPasswordRq changeRestUserPasswordRq, RestaurantUser restaurantUser, Locale locale) {
+
+        restaurantUser.setPassword(passwordEncoder.encode(changeRestUserPasswordRq.getNewPassword()));
+
+        restaurantUserRepo.save(restaurantUser);
     }
 
 

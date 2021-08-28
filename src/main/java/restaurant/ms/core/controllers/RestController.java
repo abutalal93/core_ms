@@ -10,11 +10,8 @@ import restaurant.ms.core.configrations.MessageEnvelope;
 import restaurant.ms.core.dto.requests.*;
 import restaurant.ms.core.dto.responses.PageRs;
 import restaurant.ms.core.dto.responses.RestUserLoginRs;
-import restaurant.ms.core.dto.responses.SpLoginRs;
 import restaurant.ms.core.entities.RestaurantUser;
-import restaurant.ms.core.entities.SpUser;
 import restaurant.ms.core.exceptions.HttpServiceException;
-import restaurant.ms.core.repositories.RestaurantUserRepo;
 import restaurant.ms.core.services.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -111,14 +108,14 @@ public class RestController {
 
     @RequestMapping(value = "/user/update",method = RequestMethod.POST)
     public ResponseEntity<MessageEnvelope> upadteUser(HttpServletRequest httpServletRequest,
-                                                   @RequestBody RestUserCreateRq restUserCreateRq) {
+                                                   @RequestBody RestUserUpdateRq restUserUpdateRq) {
 
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
         try {
-            restUserService.createRestUser(restUserCreateRq,restaurantUser,locale);
+            restUserService.updateRestUser(restUserUpdateRq,restaurantUser,locale);
         }catch (DataIntegrityViolationException ex){
             String message = ex.getMessage();
 
@@ -162,6 +159,20 @@ public class RestController {
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/user/changePass",method = RequestMethod.POST)
+    public ResponseEntity<MessageEnvelope> changeUserPassword(HttpServletRequest httpServletRequest,
+                                                      @RequestBody ChangeRestUserPasswordRq changeRestUserPasswordRq) {
+
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        restUserService.changeRestUserPassword(changeRestUserPasswordRq,restaurantUser,locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
 
     ////////////////////////////////////////////////////////////////////
 
