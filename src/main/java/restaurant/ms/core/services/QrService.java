@@ -89,9 +89,14 @@ public class QrService {
 
     public void updateQr(QrUpdateRq qrUpdateRq, RestaurantUser restaurantUser, Locale locale) {
 
+        Qr currentQr = qrRepo.findQrById(qrUpdateRq.getQrId());
+
         Qr qr = new Qr();
         qr.setId(qrUpdateRq.getQrId());
         qr.setAlias(qrUpdateRq.getAlias());
+        qr.setCreateDate(currentQr.getCreateDate());
+        qr.setRestaurant(restaurantUser.getRestaurant());
+        qr.setStatus(currentQr.getStatus());
 
         qrRepo.save(qr);
     }

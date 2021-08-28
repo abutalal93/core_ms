@@ -97,7 +97,7 @@ public class CategoryService {
         category.setNameEn(categoryUpdateRq.getNameEn());
         category.setAvatar(categoryUpdateRq.getAvatar());
         category.setRestaurant(restaurantUser.getRestaurant());
-        category.setStatus(Status.ACTIVE);
+        category.setStatus(currentCategory.getStatus());
 
         categoryRepo.save(category);
     }

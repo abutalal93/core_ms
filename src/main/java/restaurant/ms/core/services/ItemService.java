@@ -100,7 +100,7 @@ public class ItemService {
         item.setNameEn(itemUpdateRq.getNameEn());
         item.setAvatar(itemUpdateRq.getAvatar());
         item.setRestaurant(restaurantUser.getRestaurant());
-        item.setStatus(Status.ACTIVE);
+        item.setStatus(currentItem.getStatus());
         item.setUnitPrice(itemUpdateRq.getUnitPrice());
         item.setCategory(new Category(itemUpdateRq.getCategoryId()));
         item.setDescription(itemUpdateRq.getDescription());
