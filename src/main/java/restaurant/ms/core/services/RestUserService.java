@@ -176,6 +176,10 @@ public class RestUserService {
 
     public void activeOrInactiveRestUser(Long restUserId, RestaurantUser restaurantUser, Locale locale) {
 
+        if(restUserId.equals(restaurantUser.getId())){
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST,"Current user cannot change status for himself",locale);
+        }
+
         RestaurantUser restUser = restaurantUserRepo.findRestaurantUserById(restUserId);
 
         if(restUser == null){
@@ -198,6 +202,10 @@ public class RestUserService {
     }
 
     public void deleteRestUser(Long restUserId, RestaurantUser restaurantUser, Locale locale) {
+
+        if(restUserId.equals(restaurantUser.getId())){
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST,"Current user cannot delete himself",locale);
+        }
 
         RestaurantUser restUser = restaurantUserRepo.findRestaurantUserById(restUserId);
 
