@@ -12,7 +12,9 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "qr")
+@Table(name = "qr",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "QrAlias", columnNames = {"restaurant_id", "alias"})})
 @Setter
 @Getter
 @NoArgsConstructor

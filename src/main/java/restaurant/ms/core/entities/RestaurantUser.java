@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import restaurant.ms.core.dto.responses.CategorySearchRs;
+import restaurant.ms.core.dto.responses.RestUserSearchRs;
 import restaurant.ms.core.enums.RestaurantUserType;
 import restaurant.ms.core.enums.Status;
 
@@ -11,7 +13,9 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "restaurant_user")
+@Table(name = "restaurant_user",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "username_unique", columnNames = {"username"})})
 @Setter
 @Getter
 @NoArgsConstructor
@@ -62,4 +66,19 @@ public class RestaurantUser {
     @Column(name = "create_date")
     private LocalDateTime createDate;
 
+    public RestUserSearchRs toRestUserSearchRs(){
+        RestUserSearchRs restUserSearchRs = new RestUserSearchRs();
+        restUserSearchRs.setId(this.id);
+        restUserSearchRs.setFirstName(this.firstName);
+        restUserSearchRs.setSecondName(this.secondName);
+        restUserSearchRs.setThirdName(this.thirdName);
+        restUserSearchRs.setLastName(this.lastName);
+        restUserSearchRs.setStatus(this.status.name());
+        restUserSearchRs.setUserType(this.restaurantUserType.name());
+        restUserSearchRs.setUsername(this.username);
+        restUserSearchRs.setEmail(this.email);
+        restUserSearchRs.setMobileNumber(this.mobileNumber);
+
+        return restUserSearchRs;
+    }
 }

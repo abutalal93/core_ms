@@ -68,6 +68,101 @@ public class RestController {
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/user/search",method = RequestMethod.GET)
+    public ResponseEntity<MessageEnvelope> searchUser(HttpServletRequest httpServletRequest,
+                                                    @RequestParam(value = "page", required = false) Integer page,
+                                                    @RequestParam(value = "size", required = false) Integer size) {
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        PageRs pageRs = restUserService.searchUser(restaurantUser,page,size,locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", pageRs, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/user/add",method = RequestMethod.POST)
+    public ResponseEntity<MessageEnvelope> addUser(HttpServletRequest httpServletRequest,
+                                                   @RequestBody RestUserCreateRq restUserCreateRq) {
+
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        try {
+            restUserService.createRestUser(restUserCreateRq,restaurantUser,locale);
+        }catch (DataIntegrityViolationException ex){
+            String message = ex.getMessage();
+
+            if(message != null && message.contains("username_unique")){
+                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Username alias already exist", locale);
+            }
+
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST, "ٍSomething wrong, please contact system administrator", locale);
+        }
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/user/update",method = RequestMethod.POST)
+    public ResponseEntity<MessageEnvelope> upadteUser(HttpServletRequest httpServletRequest,
+                                                   @RequestBody RestUserCreateRq restUserCreateRq) {
+
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        try {
+            restUserService.createRestUser(restUserCreateRq,restaurantUser,locale);
+        }catch (DataIntegrityViolationException ex){
+            String message = ex.getMessage();
+
+            if(message != null && message.contains("username_unique")){
+                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Username alias already exist", locale);
+            }
+
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST, "ٍSomething wrong, please contact system administrator", locale);
+        }
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/user/activeInactive",method = RequestMethod.PUT)
+    public ResponseEntity<MessageEnvelope> activeOrInactiveUser(HttpServletRequest httpServletRequest,
+                                                              @RequestParam(value = "userId", required = false) Long userId) {
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        restUserService.activeOrInactiveRestUser(userId,restaurantUser,locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/user/delete",method = RequestMethod.DELETE)
+    public ResponseEntity<MessageEnvelope> deleteUser(HttpServletRequest httpServletRequest,
+                                                    @RequestParam(value = "userId", required = false) Long userId) {
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        restUserService.deleteRestUser(userId,restaurantUser,locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+
     ////////////////////////////////////////////////////////////////////
 
     @RequestMapping(value = "/qr/search",method = RequestMethod.GET)
@@ -93,7 +188,17 @@ public class RestController {
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        qrService.createQr(qrCreateRq,restaurantUser,locale);
+        try {
+            qrService.createQr(qrCreateRq,restaurantUser,locale);
+        }catch (DataIntegrityViolationException ex){
+            String message = ex.getMessage();
+
+            if(message != null && message.contains("qralias")){
+                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "QR alias already exist", locale);
+            }
+
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST, "ٍSomething wrong, please contact system administrator", locale);
+        }
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 
@@ -108,7 +213,17 @@ public class RestController {
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        qrService.updateQr(qrUpdateRq,restaurantUser,locale);
+        try {
+            qrService.updateQr(qrUpdateRq,restaurantUser,locale);
+        }catch (DataIntegrityViolationException ex){
+            String message = ex.getMessage();
+
+            if(message != null && message.contains("qralias")){
+                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "QR alias already exist", locale);
+            }
+
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST, "ٍSomething wrong, please contact system administrator", locale);
+        }
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 
@@ -197,7 +312,21 @@ public class RestController {
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        categoryService.updateCategory(categoryUpdateRq,restaurantUser,locale);
+        try {
+            categoryService.updateCategory(categoryUpdateRq,restaurantUser,locale);
+        }catch (DataIntegrityViolationException ex){
+            String message = ex.getMessage();
+
+            if(message != null && message.contains("categoryrestidwithnameen")){
+                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in english already exist", locale);
+            }
+
+            if(message != null && message.contains("categoryrestidwithnamear")){
+                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in arabic already exist", locale);
+            }
+
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST, "ٍSomething wrong, please contact system administrator", locale);
+        }
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 
@@ -286,7 +415,21 @@ public class RestController {
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        itemService.updateItem(itemUpdateRq,restaurantUser,locale);
+        try {
+            itemService.updateItem(itemUpdateRq,restaurantUser,locale);
+        }catch (DataIntegrityViolationException ex){
+            String message = ex.getMessage();
+
+            if(message != null && message.contains("itemrestidwithnameen")){
+                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in english already exist", locale);
+            }
+
+            if(message != null && message.contains("itemrestidwithnamear")){
+                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in arabic already exist", locale);
+            }
+
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST, "ٍSomething wrong, please contact system administrator", locale);
+        }
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 
