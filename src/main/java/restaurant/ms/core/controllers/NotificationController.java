@@ -28,10 +28,10 @@ public class NotificationController {
 
         String html = getContent(name);
 
-        Email from = new Email("w.info@wajdtuha.com");
+        Email from = new Email("adabbas@wajdtuha.com");
         Email to = new Email(email);
         Content content = new Content("text/html", html);
-        Mail mail = new Mail(from, "test", to, content);
+        Mail mail = new Mail(from, "Wajdtuha Logo Competition", to, content);
 
         SendGrid sg = new SendGrid("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\n");
 
