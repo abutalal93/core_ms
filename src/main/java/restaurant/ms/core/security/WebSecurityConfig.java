@@ -63,7 +63,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/rest/user/login")
                 .antMatchers("/lookups/**")
                 .antMatchers("/customer/**")
-                .antMatchers("/file/**");;
+                .antMatchers("/file/**")
+                .antMatchers("/notification/**");
     }
 
     @Bean

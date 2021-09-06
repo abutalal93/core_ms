@@ -15,11 +15,11 @@ import java.util.Locale;
 
 @CrossOrigin
 @Controller
-@RequestMapping("/email")
+@RequestMapping("/notification")
 public class NotificationController {
 
 
-    @RequestMapping(value = "/findAll", method = RequestMethod.GET)
+    @RequestMapping(value = "/email", method = RequestMethod.GET)
     public ResponseEntity<MessageEnvelope> sendEmail(HttpServletRequest httpServletRequest,
                                                      @RequestParam(value = "name", required = false) String name,
                                                      @RequestParam(value = "email", required = false) String email){
