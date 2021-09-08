@@ -28,7 +28,7 @@ public class NotificationController {
 
         String html = getContent(name);
 
-        Email from = new Email("adabbas@wajdtuha.com");
+        Email from = new Email("wlc@wajdtuha.com");
         Email to = new Email(email);
         Content content = new Content("text/html", html);
         Mail mail = new Mail(from, "Wajdtuha Logo Competition", to, content);
