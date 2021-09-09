@@ -17,5 +17,6 @@ public class CategoryInfoRs {
     private String nameAr;
     private String status;
     private String avatar;
+    private String deactivationDate;
     private List<ItemInfoRs> itemList;
 }

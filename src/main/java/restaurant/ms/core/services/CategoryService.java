@@ -21,6 +21,7 @@ import restaurant.ms.core.enums.Status;
 import restaurant.ms.core.exceptions.HttpServiceException;
 import restaurant.ms.core.repositories.CategoryRepo;
 import restaurant.ms.core.repositories.RestaurantRepo;
+import restaurant.ms.core.utils.Utility;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -79,6 +80,7 @@ public class CategoryService {
         category.setAvatar(categoryCreateRq.getAvatar());
         category.setRestaurant(restaurantUser.getRestaurant());
         category.setStatus(Status.ACTIVE);
+        category.setDeactivationDate(Utility.parseDateFromString(categoryCreateRq.getDeactivationDate(),"yyyy-MM-dd"));
 
         categoryRepo.save(category);
 
@@ -98,6 +100,7 @@ public class CategoryService {
         category.setAvatar(categoryUpdateRq.getAvatar());
         category.setRestaurant(restaurantUser.getRestaurant());
         category.setStatus(currentCategory.getStatus());
+        category.setDeactivationDate(Utility.parseDateFromString(categoryUpdateRq.getDeactivationDate(),"yyyy-MM-dd"));
 
         categoryRepo.save(category);
     }

@@ -14,4 +14,5 @@ public class CategoryUpdateRq {
     private String nameAr;
     private String status;
     private String avatar;
+    private String deactivationDate;
 }

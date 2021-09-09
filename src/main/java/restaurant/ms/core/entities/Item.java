@@ -8,9 +8,12 @@ import restaurant.ms.core.dto.responses.CategorySearchRs;
 import restaurant.ms.core.dto.responses.ItemInfoRs;
 import restaurant.ms.core.dto.responses.ItemSearchRs;
 import restaurant.ms.core.enums.Status;
+import restaurant.ms.core.utils.Utility;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Locale;
 
 @Entity
@@ -59,6 +62,9 @@ public class Item {
     @Column(name = "status")
     private Status status;
 
+    @Column(name = "deactivation_date")
+    private LocalDate deactivationDate;
+
     public ItemSearchRs toItemSearchRs(){
         ItemSearchRs itemSearchRs = new ItemSearchRs();
 
@@ -71,6 +77,7 @@ public class Item {
         itemSearchRs.setStatus(this.status.name());
         itemSearchRs.setId(this.id);
         itemSearchRs.setCategoryId(this.category.getId());
+        itemSearchRs.setDeactivationDate(Utility.parseDateFromString(deactivationDate,"yyyy-MM-hh"));
 
         return itemSearchRs;
     }
@@ -87,6 +94,8 @@ public class Item {
         itemInfoRs.setStatus(this.status.name());
         itemInfoRs.setId(this.id);
         itemInfoRs.setCategoryId(this.category.getId());
+        itemInfoRs.setDeactivationDate(Utility.parseDateFromString(deactivationDate,"yyyy-MM-hh"));
+
 
         return itemInfoRs;
     }

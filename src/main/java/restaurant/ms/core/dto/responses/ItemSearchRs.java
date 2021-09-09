@@ -20,4 +20,5 @@ public class ItemSearchRs {
     private BigDecimal unitPrice;
     private String description;
     private Long categoryId;
+    private String deactivationDate;
 }

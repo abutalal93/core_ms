@@ -34,6 +34,9 @@ public class RestController {
     @Autowired
     private ItemService itemService;
 
+    @Autowired
+    private OrderService orderService;
+
     @RequestMapping(value = "/user/login",method = RequestMethod.POST)
     public ResponseEntity<MessageEnvelope> userLogin(HttpServletRequest httpServletRequest,
                                                       @RequestBody SpLoginRq spLoginRq) {
@@ -471,6 +474,24 @@ public class RestController {
         itemService.deleteItem(qrId,restaurantUser,locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+
+    ////////////////////////////////////////////////////////////////////
+
+    @RequestMapping(value = "/order/search",method = RequestMethod.GET)
+    public ResponseEntity<MessageEnvelope> searchOrder(HttpServletRequest httpServletRequest,
+                                                      @RequestParam(value = "page", required = false) Integer page,
+                                                      @RequestParam(value = "size", required = false) Integer size) {
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        PageRs pageRs = orderService.searchOrder(restaurantUser,page,size,locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", pageRs, locale);
 
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }

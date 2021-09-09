@@ -19,7 +19,7 @@ public class RestaurantManagementSystemApplication {
 
 	public static void main(String[] args) {
 
-		Email from = new Email("adabbas@wajdtuha.com");
+		Email from = new Email("wlc@wajdtuha.com");
 		Email to = new Email("m.omari@wajdtuha.com");
 		Content content = new Content("text/html", "test");
 		Mail mail = new Mail(from, "test", to, content);

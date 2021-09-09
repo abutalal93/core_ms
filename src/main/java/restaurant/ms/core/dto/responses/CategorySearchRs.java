@@ -17,4 +17,5 @@ public class CategorySearchRs {
     private String nameAr;
     private String status;
     private String avatar;
+    private String deactivationDate;
 }

@@ -21,6 +21,7 @@ import restaurant.ms.core.enums.Status;
 import restaurant.ms.core.exceptions.HttpServiceException;
 import restaurant.ms.core.repositories.ItemRepo;
 import restaurant.ms.core.repositories.RestaurantRepo;
+import restaurant.ms.core.utils.Utility;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -80,7 +81,7 @@ public class ItemService {
         item.setUnitPrice(itemCreateRq.getUnitPrice());
         item.setCategory(new Category(itemCreateRq.getCategoryId()));
         item.setDescription(itemCreateRq.getDescription());
-
+        item.setDeactivationDate(Utility.parseDateFromString(itemCreateRq.getDeactivationDate(),"yyyy-MM-dd"));
 
         itemRepo.save(item);
 
@@ -104,6 +105,8 @@ public class ItemService {
         item.setUnitPrice(itemUpdateRq.getUnitPrice());
         item.setCategory(new Category(itemUpdateRq.getCategoryId()));
         item.setDescription(itemUpdateRq.getDescription());
+        item.setDeactivationDate(Utility.parseDateFromString(itemUpdateRq.getDeactivationDate(),"yyyy-MM-dd"));
+
         itemRepo.save(item);
     }
 

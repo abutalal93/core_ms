@@ -18,4 +18,5 @@ public class ItemUpdateRq {
     private BigDecimal unitPrice;
     private String description;
     private Long categoryId;
+    private String deactivationDate;
 }
