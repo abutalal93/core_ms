@@ -41,7 +41,7 @@ public class CustomerController {
     }
 
 
-    @RequestMapping(value = "/order/submit",method = RequestMethod.GET)
+    @RequestMapping(value = "/order/submit",method = RequestMethod.POST)
     public ResponseEntity<MessageEnvelope> qrInfo(HttpServletRequest httpServletRequest,
                                                   @RequestBody OrderSubmitRq orderSubmitRq) {
         Locale locale = httpServletRequest.getLocale();
