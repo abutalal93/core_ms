@@ -496,4 +496,32 @@ public class RestController {
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/order/pay",method = RequestMethod.PUT)
+    public ResponseEntity<MessageEnvelope> orderPay(HttpServletRequest httpServletRequest,
+                                                                @RequestParam(value = "orderId", required = false) Long orderId) {
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        orderService.payOrder(orderId,restaurantUser,locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/order/deliver",method = RequestMethod.PUT)
+    public ResponseEntity<MessageEnvelope> orderDeliver(HttpServletRequest httpServletRequest,
+                                                                @RequestParam(value = "orderId", required = false) Long orderId) {
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        orderService.deliverOrder(orderId,restaurantUser,locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
 }

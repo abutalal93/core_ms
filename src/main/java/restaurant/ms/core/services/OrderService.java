@@ -109,4 +109,34 @@ public class OrderService {
         orderTrackRepo.save(orderTrack);
     }
 
+    public void payOrder(Long orderId, RestaurantUser restaurantUser, Locale locale) {
+
+        Order order = orderRepo.findOrderById(orderId);
+        order.setStatus(OrderStatus.PAID);
+        orderRepo.save(order);
+
+        OrderTrack orderTrack = new OrderTrack();
+        orderTrack.setOrder(order);
+        orderTrack.setCreateDate(LocalDateTime.now());
+        orderTrack.setUserReference(restaurantUser.getUsername());
+        orderTrack.setStatus(OrderStatus.PAID);
+
+        orderTrackRepo.save(orderTrack);
+    }
+
+    public void deliverOrder(Long orderId, RestaurantUser restaurantUser, Locale locale) {
+
+        Order order = orderRepo.findOrderById(orderId);
+        order.setStatus(OrderStatus.DELIVERED);
+        orderRepo.save(order);
+
+        OrderTrack orderTrack = new OrderTrack();
+        orderTrack.setOrder(order);
+        orderTrack.setCreateDate(LocalDateTime.now());
+        orderTrack.setUserReference(restaurantUser.getUsername());
+        orderTrack.setStatus(OrderStatus.DELIVERED);
+
+        orderTrackRepo.save(orderTrack);
+    }
+
 }
