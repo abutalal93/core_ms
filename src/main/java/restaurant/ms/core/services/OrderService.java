@@ -55,7 +55,7 @@ public class OrderService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id");
 
-        Page<Order> orderPage = orderRepo.findAllBy(restaurantUser.getRestaurant(),pageable);
+        Page<Order> orderPage = orderRepo.findAllByRest(restaurantUser.getRestaurant(),pageable);
 
         List<Order> orderList = orderPage.getContent();
 

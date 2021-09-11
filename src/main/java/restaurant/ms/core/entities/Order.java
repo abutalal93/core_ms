@@ -4,29 +4,23 @@ package restaurant.ms.core.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import restaurant.ms.core.dto.responses.ItemInfoRs;
-import restaurant.ms.core.dto.responses.ItemSearchRs;
 import restaurant.ms.core.dto.responses.OrderSearchRs;
 import restaurant.ms.core.enums.OrderStatus;
-import restaurant.ms.core.enums.Status;
-import restaurant.ms.core.utils.Utility;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Locale;
 
 @Entity
-@Table(name = "order")
+@Table(name = "request")
 @Setter
 @Getter
 @NoArgsConstructor
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
-    @SequenceGenerator(name="order_seq", sequenceName = "order_seq", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "request_request_seq")
+    @SequenceGenerator(name="request_request_seq", sequenceName = "request_request_seq", initialValue = 1, allocationSize = 1)
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
@@ -57,7 +51,7 @@ public class Order {
     private Restaurant restaurant;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "order_status")
+    @Column(name = "status")
     private OrderStatus status;
 
     public OrderSearchRs toOrderSearchRs(){

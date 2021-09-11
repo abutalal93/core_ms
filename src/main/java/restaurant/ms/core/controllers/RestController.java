@@ -524,4 +524,16 @@ public class RestController {
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/order/timeline",method = RequestMethod.GET)
+    public ResponseEntity<MessageEnvelope> orderTimeline(HttpServletRequest httpServletRequest,
+                                                        @RequestParam(value = "orderId", required = false) Long orderId) {
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
 }

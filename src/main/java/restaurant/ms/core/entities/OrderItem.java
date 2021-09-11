@@ -11,20 +11,20 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "order_item")
+@Table(name = "request_item")
 @Setter
 @Getter
 @NoArgsConstructor
 public class OrderItem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_item_seq")
-    @SequenceGenerator(name="order_item_seq", sequenceName = "order_item_seq", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "request_item_seq")
+    @SequenceGenerator(name="request_item_seq", sequenceName = "request_item_seq", initialValue = 1, allocationSize = 1)
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "request_id")
     private Order order;
 
     @ManyToOne
