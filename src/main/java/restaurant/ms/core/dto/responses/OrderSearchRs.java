@@ -26,4 +26,5 @@ public class OrderSearchRs {
     private Long qrId;
     private Long restaurantId;
     private String status;
+    private String qrAlias;
 }

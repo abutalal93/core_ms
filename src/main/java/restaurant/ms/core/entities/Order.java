@@ -74,6 +74,7 @@ public class Order {
         orderSearchRs.setRestaurantId(this.restaurant.getId());
         orderSearchRs.setStatus(this.status.name());
         orderSearchRs.setTotalAmount(this.totalAmount);
+        orderSearchRs.setQrAlias(this.qr.getAlias());
 
         return orderSearchRs;
     }

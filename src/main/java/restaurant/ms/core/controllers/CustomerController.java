@@ -11,10 +11,7 @@ import restaurant.ms.core.dto.responses.PageRs;
 import restaurant.ms.core.dto.responses.QrInfoRs;
 import restaurant.ms.core.dto.responses.RestUserLoginRs;
 import restaurant.ms.core.entities.RestaurantUser;
-import restaurant.ms.core.services.CategoryService;
-import restaurant.ms.core.services.ItemService;
-import restaurant.ms.core.services.QrService;
-import restaurant.ms.core.services.RestUserService;
+import restaurant.ms.core.services.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
@@ -27,6 +24,9 @@ public class CustomerController {
     @Autowired
     private QrService qrService;
 
+    @Autowired
+    private OrderService orderService;
+
 
     @RequestMapping(value = "/qr/info",method = RequestMethod.GET)
     public ResponseEntity<MessageEnvelope> qrInfo(HttpServletRequest httpServletRequest,
@@ -36,6 +36,19 @@ public class CustomerController {
         QrInfoRs qrInfoRs = qrService.qrInfo(qrId,locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", qrInfoRs, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/order/submit",method = RequestMethod.GET)
+    public ResponseEntity<MessageEnvelope> qrInfo(HttpServletRequest httpServletRequest,
+                                                  @RequestBody OrderSubmitRq orderSubmitRq) {
+        Locale locale = httpServletRequest.getLocale();
+
+        orderService.createOrder(orderSubmitRq,locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
