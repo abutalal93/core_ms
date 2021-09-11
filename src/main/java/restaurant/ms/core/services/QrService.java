@@ -91,6 +91,7 @@ public class QrService {
         qr.setCreateDate(currentQr.getCreateDate());
         qr.setRestaurant(restaurantUser.getRestaurant());
         qr.setStatus(currentQr.getStatus());
+        qr.setCode(currentQr.getCode());
 
         qrRepo.save(qr);
     }
