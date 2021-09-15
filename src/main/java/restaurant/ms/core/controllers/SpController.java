@@ -15,6 +15,7 @@ import restaurant.ms.core.dto.responses.*;
 import restaurant.ms.core.entities.FileDb;
 import restaurant.ms.core.entities.RestaurantUser;
 import restaurant.ms.core.entities.SpUser;
+import restaurant.ms.core.exceptions.HttpServiceException;
 import restaurant.ms.core.security.JwtTokenProvider;
 import restaurant.ms.core.security.JwtUser;
 import restaurant.ms.core.services.FileDbService;
@@ -39,6 +40,10 @@ public class SpController {
     public ResponseEntity<MessageEnvelope> userLogin(HttpServletRequest httpServletRequest,
                                                       @RequestBody SpLoginRq spLoginRq) {
         Locale locale = httpServletRequest.getLocale();
+
+        if(true){
+            throw new HttpServiceException(HttpStatus.INTERNAL_SERVER_ERROR,"Unable to open database connection",locale);
+        }
 
         SpLoginRs spLoginRs = spUserService.loginSpUser(spLoginRq,locale);
 

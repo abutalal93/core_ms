@@ -11,6 +11,7 @@ import restaurant.ms.core.dto.responses.PageRs;
 import restaurant.ms.core.dto.responses.QrInfoRs;
 import restaurant.ms.core.dto.responses.RestUserLoginRs;
 import restaurant.ms.core.entities.RestaurantUser;
+import restaurant.ms.core.exceptions.HttpServiceException;
 import restaurant.ms.core.services.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +45,12 @@ public class CustomerController {
     @RequestMapping(value = "/order/submit",method = RequestMethod.POST)
     public ResponseEntity<MessageEnvelope> qrInfo(HttpServletRequest httpServletRequest,
                                                   @RequestBody OrderSubmitRq orderSubmitRq) {
+
         Locale locale = httpServletRequest.getLocale();
+
+        if(true){
+            throw new HttpServiceException(HttpStatus.INTERNAL_SERVER_ERROR,"Unable to open database connection",locale);
+        }
 
         orderService.createOrder(orderSubmitRq,locale);
 

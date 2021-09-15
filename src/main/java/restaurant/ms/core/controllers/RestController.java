@@ -42,6 +42,10 @@ public class RestController {
                                                       @RequestBody SpLoginRq spLoginRq) {
         Locale locale = httpServletRequest.getLocale();
 
+        if(true){
+            throw new HttpServiceException(HttpStatus.INTERNAL_SERVER_ERROR,"Unable to open database connection",locale);
+        }
+
         RestUserLoginRs restUserLoginRs = restUserService.loginRestUser(spLoginRq,locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", restUserLoginRs, locale);
