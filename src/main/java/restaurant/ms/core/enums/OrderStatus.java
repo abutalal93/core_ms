@@ -5,7 +5,8 @@ public enum OrderStatus {
     CANCELED,
     APPROVED,
     PAID,
-    DELIVERED;
+    DELIVERED,
+    CLOSED;
 
     public static OrderStatus getValue(String value){
         try {

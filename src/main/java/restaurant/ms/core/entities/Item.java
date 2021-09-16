@@ -1,6 +1,7 @@
 package restaurant.ms.core.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -50,10 +51,12 @@ public class Item {
     @Column(name = "description")
     private String description;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
@@ -77,7 +80,7 @@ public class Item {
         itemSearchRs.setStatus(this.status.name());
         itemSearchRs.setId(this.id);
         itemSearchRs.setCategoryId(this.category.getId());
-        itemSearchRs.setDeactivationDate(Utility.parseDateFromString(deactivationDate,"yyyy-MM-hh"));
+        itemSearchRs.setDeactivationDate(Utility.parseDateFromString(deactivationDate,"yyyy-MM-dd"));
 
         return itemSearchRs;
     }

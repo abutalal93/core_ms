@@ -66,7 +66,7 @@ public class Category {
         categorySearchRs.setCode(this.code);
         categorySearchRs.setStatus(this.status.name());
         categorySearchRs.setId(this.id);
-        categorySearchRs.setDeactivationDate(Utility.parseDateFromString(deactivationDate,"yyyy-MM-hh"));
+        categorySearchRs.setDeactivationDate(Utility.parseDateFromString(deactivationDate,"yyyy-MM-dd"));
 
         return categorySearchRs;
     }

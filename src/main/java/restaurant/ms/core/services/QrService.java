@@ -16,12 +16,10 @@ import restaurant.ms.core.dto.responses.*;
 import restaurant.ms.core.entities.*;
 import restaurant.ms.core.enums.Status;
 import restaurant.ms.core.exceptions.HttpServiceException;
-import restaurant.ms.core.repositories.CategoryRepo;
-import restaurant.ms.core.repositories.ItemRepo;
-import restaurant.ms.core.repositories.QrRepo;
-import restaurant.ms.core.repositories.RestaurantRepo;
+import restaurant.ms.core.repositories.*;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
@@ -42,6 +40,9 @@ public class QrService {
 
     @Autowired
     private ItemRepo itemRepo;
+
+    @Autowired
+    private OrderRepo orderRepo;
 
     public PageRs searchQr(RestaurantUser restaurantUser,Integer page, Integer size, Locale locale) {
         if (page == null)
@@ -155,6 +156,17 @@ public class QrService {
         qrInfoRs.setBrandName(qr.getRestaurant().getBrandNameEn());
         qrInfoRs.setLogo(qr.getRestaurant().getLogo());
         qrInfoRs.setCategoryList(categoryInfo(qr,locale));
+
+        List<Order> orderList = orderRepo.findCurrentRunningOrder(qr);
+
+        if(orderList != null && !orderList.isEmpty()){
+
+            List<OrderSearchRs> orderSearchRsList = orderList.stream()
+                    .map(order -> order.toOrderSearchRs())
+                    .collect(Collectors.toList());
+
+            qrInfoRs.setOrderList(orderSearchRsList);
+        }
 
         return qrInfoRs;
     }

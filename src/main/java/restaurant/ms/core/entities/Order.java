@@ -4,6 +4,7 @@ package restaurant.ms.core.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import restaurant.ms.core.dto.responses.OrderInfoRs;
 import restaurant.ms.core.dto.responses.OrderSearchRs;
 import restaurant.ms.core.enums.OrderStatus;
 
@@ -57,6 +58,25 @@ public class Order {
     public OrderSearchRs toOrderSearchRs(){
 
         OrderSearchRs orderSearchRs = new OrderSearchRs();
+
+        orderSearchRs.setId(this.id);
+        orderSearchRs.setReference(this.reference);
+        orderSearchRs.setCreateDate(this.createDate);
+        orderSearchRs.setCustomerName(this.customerName);
+        orderSearchRs.setEmail(this.email);
+        orderSearchRs.setMobileNumber(this.mobileNumber);
+        orderSearchRs.setQrId(this.qr.getId());
+        orderSearchRs.setRestaurantId(this.restaurant.getId());
+        orderSearchRs.setStatus(this.status.name());
+        orderSearchRs.setTotalAmount(this.totalAmount);
+        orderSearchRs.setQrAlias(this.qr.getAlias());
+
+        return orderSearchRs;
+    }
+
+    public OrderInfoRs toOrderInfoRs(){
+
+        OrderInfoRs orderSearchRs = new OrderInfoRs();
 
         orderSearchRs.setId(this.id);
         orderSearchRs.setReference(this.reference);

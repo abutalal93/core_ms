@@ -1,6 +1,7 @@
 package restaurant.ms.core.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,7 @@ public class OrderItem {
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "request_id")
     private Order order;

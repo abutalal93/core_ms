@@ -41,10 +41,6 @@ public class SpController {
                                                       @RequestBody SpLoginRq spLoginRq) {
         Locale locale = httpServletRequest.getLocale();
 
-        if(true){
-            throw new HttpServiceException(HttpStatus.INTERNAL_SERVER_ERROR,"Unable to open database connection",locale);
-        }
-
         SpLoginRs spLoginRs = spUserService.loginSpUser(spLoginRq,locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", spLoginRs, locale);

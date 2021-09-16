@@ -9,6 +9,7 @@ import restaurant.ms.core.entities.Category;
 import restaurant.ms.core.entities.Restaurant;
 import restaurant.ms.core.enums.Status;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface CategoryRepo extends CrudRepository<Category,String> {

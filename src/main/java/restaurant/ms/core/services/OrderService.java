@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import restaurant.ms.core.dto.requests.CategoryCreateRq;
 import restaurant.ms.core.dto.requests.OrderSubmitRq;
 import restaurant.ms.core.dto.responses.ItemInfoRs;
+import restaurant.ms.core.dto.responses.OrderInfoRs;
 import restaurant.ms.core.dto.responses.OrderSearchRs;
 import restaurant.ms.core.dto.responses.PageRs;
 import restaurant.ms.core.entities.*;
@@ -20,6 +21,7 @@ import restaurant.ms.core.repositories.*;
 import restaurant.ms.core.utils.Utility;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
@@ -55,7 +57,44 @@ public class OrderService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id");
 
-        Page<Order> orderPage = orderRepo.findAllByRest(restaurantUser.getRestaurant(),pageable);
+        Page<Order> orderPage = orderRepo.findCurrentRunningOrderByRest(restaurantUser.getRestaurant(),pageable);
+
+        List<Order> orderList = orderPage.getContent();
+
+        if (orderList == null) {
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST, "no_data_found", locale);
+        }
+
+        List<OrderSearchRs> orderSearchRsList = orderList.stream()
+                .map(order -> order.toOrderSearchRs())
+                .collect(Collectors.toList());
+
+        return new PageRs(orderPage.getTotalElements(), orderPage.getTotalPages(), orderSearchRsList);
+    }
+
+    public PageRs searchOrder(RestaurantUser restaurantUser,String reference, String dateFromStr, String dateToStr, Integer page, Integer size, Locale locale) {
+        if (page == null)
+            page = 0;
+        if (size == null)
+            size = 10;
+
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id");
+
+        LocalDate fromDate = Utility.parseDateFromString(dateFromStr,"yyyy-MM-dd");
+        if(fromDate == null){
+            fromDate = LocalDate.of(2000,1,1);
+        }
+
+        LocalDate toDate = Utility.parseDateFromString(dateToStr,"yyyy-MM-dd");
+        if(toDate == null){
+            toDate = LocalDate.of(2030,1,1);
+        }
+
+        if(reference != null && reference.isEmpty()){
+            reference = null;
+        }
+
+        Page<Order> orderPage = orderRepo.searchOrder(restaurantUser.getRestaurant(),reference,fromDate.atStartOfDay(),toDate.atStartOfDay(),pageable);
 
         List<Order> orderList = orderPage.getContent();
 
@@ -71,7 +110,7 @@ public class OrderService {
     }
 
 
-    public void createOrder(OrderSubmitRq orderSubmitRq, Locale locale) {
+    public String createOrder(OrderSubmitRq orderSubmitRq, Locale locale) {
 
         Order order = new Order();
         order.setCreateDate(LocalDateTime.now());
@@ -107,6 +146,23 @@ public class OrderService {
         orderTrack.setStatus(OrderStatus.INIT);
 
         orderTrackRepo.save(orderTrack);
+
+        return order.getReference();
+    }
+
+    public void approveOrder(Long orderId, RestaurantUser restaurantUser, Locale locale) {
+
+        Order order = orderRepo.findOrderById(orderId);
+        order.setStatus(OrderStatus.APPROVED);
+        orderRepo.save(order);
+
+        OrderTrack orderTrack = new OrderTrack();
+        orderTrack.setOrder(order);
+        orderTrack.setCreateDate(LocalDateTime.now());
+        orderTrack.setUserReference(restaurantUser.getUsername());
+        orderTrack.setStatus(OrderStatus.APPROVED);
+
+        orderTrackRepo.save(orderTrack);
     }
 
     public void payOrder(Long orderId, RestaurantUser restaurantUser, Locale locale) {
@@ -122,6 +178,40 @@ public class OrderService {
         orderTrack.setStatus(OrderStatus.PAID);
 
         orderTrackRepo.save(orderTrack);
+
+        List<OrderTrack> trackList = orderTrackRepo.findOrderTrackByOrderAndStatus(order,OrderStatus.DELIVERED);
+
+        if(trackList != null && !trackList.isEmpty()){
+
+            order.setStatus(OrderStatus.CLOSED);
+            orderRepo.save(order);
+
+            OrderTrack orderTrackClosed = new OrderTrack();
+            orderTrackClosed.setOrder(order);
+            orderTrackClosed.setCreateDate(LocalDateTime.now());
+            orderTrackClosed.setUserReference(restaurantUser.getUsername());
+            orderTrackClosed.setStatus(OrderStatus.CLOSED);
+
+            orderTrackRepo.save(orderTrackClosed);
+        }
+
+
+    }
+
+    public void cancelOrder(Long orderId, RestaurantUser restaurantUser, Locale locale) {
+
+        Order order = orderRepo.findOrderById(orderId);
+        order.setStatus(OrderStatus.CANCELED);
+        orderRepo.save(order);
+
+        OrderTrack orderTrack = new OrderTrack();
+        orderTrack.setOrder(order);
+        orderTrack.setCreateDate(LocalDateTime.now());
+        orderTrack.setUserReference(restaurantUser.getUsername());
+        orderTrack.setStatus(OrderStatus.CANCELED);
+
+        orderTrackRepo.save(orderTrack);
+
     }
 
     public void deliverOrder(Long orderId, RestaurantUser restaurantUser, Locale locale) {
@@ -137,6 +227,43 @@ public class OrderService {
         orderTrack.setStatus(OrderStatus.DELIVERED);
 
         orderTrackRepo.save(orderTrack);
+
+        List<OrderTrack> trackList = orderTrackRepo.findOrderTrackByOrderAndStatus(order,OrderStatus.PAID);
+
+        if(trackList != null && !trackList.isEmpty()){
+
+            order.setStatus(OrderStatus.CLOSED);
+            orderRepo.save(order);
+
+            OrderTrack orderTrackClosed = new OrderTrack();
+            orderTrackClosed.setOrder(order);
+            orderTrackClosed.setCreateDate(LocalDateTime.now());
+            orderTrackClosed.setUserReference(restaurantUser.getUsername());
+            orderTrackClosed.setStatus(OrderStatus.CLOSED);
+
+            orderTrackRepo.save(orderTrackClosed);
+        }
+    }
+
+
+    public OrderInfoRs findOrderInfo(Long orderId, Locale locale){
+
+
+        Order order = orderRepo.findOrderById(orderId);
+
+        if(order == null){
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST, "no_data_found", locale);
+        }
+
+        OrderInfoRs orderInfoRs = order.toOrderInfoRs();
+
+        List<OrderItem> itemList = orderItemRepo.findOrderItemByOrder(order);
+        orderInfoRs.setItemList(itemList);
+
+        List<OrderTrack> trackList = orderTrackRepo.findOrderTrackByOrder(order);
+        orderInfoRs.setTrackList(trackList);
+
+        return orderInfoRs;
     }
 
 }

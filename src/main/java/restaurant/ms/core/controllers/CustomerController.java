@@ -34,11 +34,7 @@ public class CustomerController {
                                                     @RequestParam(value = "qrId", required = false) Long qrId) {
         Locale locale = httpServletRequest.getLocale();
 
-        if(true){
-            throw new HttpServiceException(HttpStatus.INTERNAL_SERVER_ERROR,"Unable to open database connection",locale);
-        }
-
-        QrInfoRs qrInfoRs = qrService.qrInfo(qrId,locale);
+        Object qrInfoRs = qrService.qrInfo(qrId,locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", qrInfoRs, locale);
 
@@ -52,13 +48,9 @@ public class CustomerController {
 
         Locale locale = httpServletRequest.getLocale();
 
-        if(true){
-            throw new HttpServiceException(HttpStatus.INTERNAL_SERVER_ERROR,"Unable to open database connection",locale);
-        }
+        String reference = orderService.createOrder(orderSubmitRq,locale);
 
-        orderService.createOrder(orderSubmitRq,locale);
-
-        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", reference, locale);
 
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }

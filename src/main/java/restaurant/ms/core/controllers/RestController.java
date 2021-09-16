@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import restaurant.ms.core.configrations.MessageEnvelope;
 import restaurant.ms.core.dto.requests.*;
+import restaurant.ms.core.dto.responses.OrderInfoRs;
 import restaurant.ms.core.dto.responses.PageRs;
 import restaurant.ms.core.dto.responses.RestUserLoginRs;
 import restaurant.ms.core.entities.RestaurantUser;
@@ -41,10 +42,6 @@ public class RestController {
     public ResponseEntity<MessageEnvelope> userLogin(HttpServletRequest httpServletRequest,
                                                       @RequestBody SpLoginRq spLoginRq) {
         Locale locale = httpServletRequest.getLocale();
-
-        if(true){
-            throw new HttpServiceException(HttpStatus.INTERNAL_SERVER_ERROR,"Unable to open database connection",locale);
-        }
 
         RestUserLoginRs restUserLoginRs = restUserService.loginRestUser(spLoginRq,locale);
 
@@ -500,6 +497,20 @@ public class RestController {
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/order/approve",method = RequestMethod.PUT)
+    public ResponseEntity<MessageEnvelope> approvePay(HttpServletRequest httpServletRequest,
+                                                    @RequestParam(value = "orderId", required = false) Long orderId) {
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        orderService.approveOrder(orderId,restaurantUser,locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/order/pay",method = RequestMethod.PUT)
     public ResponseEntity<MessageEnvelope> orderPay(HttpServletRequest httpServletRequest,
                                                                 @RequestParam(value = "orderId", required = false) Long orderId) {
@@ -508,6 +519,20 @@ public class RestController {
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
         orderService.payOrder(orderId,restaurantUser,locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/order/cancel",method = RequestMethod.PUT)
+    public ResponseEntity<MessageEnvelope> orderCancel(HttpServletRequest httpServletRequest,
+                                                    @RequestParam(value = "orderId", required = false) Long orderId) {
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        orderService.cancelOrder(orderId,restaurantUser,locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 
@@ -535,9 +560,28 @@ public class RestController {
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+        OrderInfoRs orderInfoRs = orderService.findOrderInfo(orderId,locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", orderInfoRs, locale);
 
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/order/history",method = RequestMethod.GET)
+    public ResponseEntity<MessageEnvelope> searchOrder(HttpServletRequest httpServletRequest,
+                                                       @RequestParam(value = "reference", required = false) String reference,
+                                                       @RequestParam(value = "dateFrom", required = false) String dateFrom,
+                                                       @RequestParam(value = "dateTo", required = false) String dateTo,
+                                                       @RequestParam(value = "page", required = false) Integer page,
+                                                       @RequestParam(value = "size", required = false) Integer size) {
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        PageRs pageRs = orderService.searchOrder(restaurantUser,reference,dateFrom,dateTo,page,size,locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", pageRs, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
 }

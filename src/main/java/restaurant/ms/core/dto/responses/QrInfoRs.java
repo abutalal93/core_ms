@@ -16,4 +16,5 @@ public class QrInfoRs {
     private String brandName;
     private String logo;
     private List<CategoryInfoRs> categoryList;
+    private List<OrderSearchRs> orderList;
 }

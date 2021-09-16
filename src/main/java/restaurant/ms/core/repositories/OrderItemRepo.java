@@ -13,4 +13,6 @@ import java.util.List;
 
 public interface OrderItemRepo extends CrudRepository<OrderItem,String> {
 
+    @Query("select itm from OrderItem itm where itm.order=:order order by itm.id asc")
+    public List<OrderItem> findOrderItemByOrder(Order order);
 }
