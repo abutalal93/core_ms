@@ -132,6 +132,8 @@ public class CategoryService {
         }
 
         categoryRepo.save(category);
+
+        deactivateCategoryJob();
     }
 
     public void deleteCategory(Long categoryId, RestaurantUser restaurantUser, Locale locale) {
