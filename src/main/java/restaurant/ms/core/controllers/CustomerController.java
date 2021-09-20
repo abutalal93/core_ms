@@ -28,11 +28,15 @@ public class CustomerController {
     @Autowired
     private OrderService orderService;
 
-
     @RequestMapping(value = "/qr/info",method = RequestMethod.GET)
     public ResponseEntity<MessageEnvelope> qrInfo(HttpServletRequest httpServletRequest,
-                                                    @RequestParam(value = "qrId", required = false) Long qrId) {
+                                                    @RequestParam(value = "qrId", required = false) String qrId) {
         Locale locale = httpServletRequest.getLocale();
+
+        if(qrId != null && !qrId.isEmpty()){
+            qrId = qrId.replaceAll("\\s", "+");
+
+        }
 
         Object qrInfoRs = qrService.qrInfo(qrId,locale);
 

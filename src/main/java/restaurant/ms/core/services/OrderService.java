@@ -15,6 +15,7 @@ import restaurant.ms.core.dto.responses.OrderSearchRs;
 import restaurant.ms.core.dto.responses.PageRs;
 import restaurant.ms.core.entities.*;
 import restaurant.ms.core.enums.OrderStatus;
+import restaurant.ms.core.enums.RestaurantUserType;
 import restaurant.ms.core.enums.Status;
 import restaurant.ms.core.exceptions.HttpServiceException;
 import restaurant.ms.core.repositories.*;
@@ -167,35 +168,43 @@ public class OrderService {
 
     public void payOrder(Long orderId, RestaurantUser restaurantUser, Locale locale) {
 
+        OrderStatus orderStatus = null;
+
+        if(restaurantUser.getRestaurantUserType().equals(RestaurantUserType.SUPER_ADMIN)){
+            orderStatus = OrderStatus.PAID;
+        }else {
+            orderStatus = OrderStatus.PAY_REQUEST;
+        }
+
         Order order = orderRepo.findOrderById(orderId);
-        order.setStatus(OrderStatus.PAID);
+        order.setStatus(orderStatus);
         orderRepo.save(order);
 
         OrderTrack orderTrack = new OrderTrack();
         orderTrack.setOrder(order);
         orderTrack.setCreateDate(LocalDateTime.now());
         orderTrack.setUserReference(restaurantUser.getUsername());
-        orderTrack.setStatus(OrderStatus.PAID);
+        orderTrack.setStatus(orderStatus);
 
         orderTrackRepo.save(orderTrack);
 
-        List<OrderTrack> trackList = orderTrackRepo.findOrderTrackByOrderAndStatus(order,OrderStatus.DELIVERED);
+        if(orderStatus.equals(OrderStatus.PAID)){
+            List<OrderTrack> trackList = orderTrackRepo.findOrderTrackByOrderAndStatus(order,OrderStatus.DELIVERED);
 
-        if(trackList != null && !trackList.isEmpty()){
+            if(trackList != null && !trackList.isEmpty()){
 
-            order.setStatus(OrderStatus.CLOSED);
-            orderRepo.save(order);
+                order.setStatus(OrderStatus.CLOSED);
+                orderRepo.save(order);
 
-            OrderTrack orderTrackClosed = new OrderTrack();
-            orderTrackClosed.setOrder(order);
-            orderTrackClosed.setCreateDate(LocalDateTime.now());
-            orderTrackClosed.setUserReference(restaurantUser.getUsername());
-            orderTrackClosed.setStatus(OrderStatus.CLOSED);
+                OrderTrack orderTrackClosed = new OrderTrack();
+                orderTrackClosed.setOrder(order);
+                orderTrackClosed.setCreateDate(LocalDateTime.now());
+                orderTrackClosed.setUserReference(restaurantUser.getUsername());
+                orderTrackClosed.setStatus(OrderStatus.CLOSED);
 
-            orderTrackRepo.save(orderTrackClosed);
+                orderTrackRepo.save(orderTrackClosed);
+            }
         }
-
-
     }
 
     public void cancelOrder(Long orderId, RestaurantUser restaurantUser, Locale locale) {
@@ -217,6 +226,11 @@ public class OrderService {
     public void deliverOrder(Long orderId, RestaurantUser restaurantUser, Locale locale) {
 
         Order order = orderRepo.findOrderById(orderId);
+
+        if(order.getStatus().equals(OrderStatus.PAY_REQUEST)){
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST,"Please approve payment before doing any action",locale);
+        }
+
         order.setStatus(OrderStatus.DELIVERED);
         orderRepo.save(order);
 

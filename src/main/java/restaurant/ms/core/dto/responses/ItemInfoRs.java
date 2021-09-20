@@ -22,4 +22,6 @@ public class ItemInfoRs {
     private Long categoryId;
     private String deactivationDate;
     private BigDecimal quantity;
+    private String taxType;
+    private BigDecimal tax;
 }

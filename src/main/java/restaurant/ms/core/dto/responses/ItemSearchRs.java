@@ -3,7 +3,11 @@ package restaurant.ms.core.dto.responses;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import restaurant.ms.core.enums.TaxType;
 
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.math.BigDecimal;
 
 @Setter
@@ -21,4 +25,6 @@ public class ItemSearchRs {
     private String description;
     private Long categoryId;
     private String deactivationDate;
+    private String taxType;
+    private BigDecimal tax;
 }

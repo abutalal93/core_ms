@@ -63,6 +63,7 @@ public class RestController {
         RestUserLoginRs.setFirstName(restaurantUser.getFirstName());
         RestUserLoginRs.setLastName(restaurantUser.getLastName());
         RestUserLoginRs.setAvatar(restaurantUser.getRestaurant().getLogo());
+        RestUserLoginRs.setType(restaurantUser.getRestaurantUserType().name());
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", RestUserLoginRs, locale);
 

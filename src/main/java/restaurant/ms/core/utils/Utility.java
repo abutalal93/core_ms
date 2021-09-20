@@ -58,4 +58,15 @@ public class Utility {
         }
 
     }
+
+    public static Long parseLong(String date) {
+        if (date == null || date.isEmpty()) {
+            return null;
+        }
+        try {
+            return Long.parseLong(date);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
 }

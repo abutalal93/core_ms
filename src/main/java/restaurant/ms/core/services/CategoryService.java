@@ -24,6 +24,7 @@ import restaurant.ms.core.repositories.RestaurantRepo;
 import restaurant.ms.core.utils.Utility;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
@@ -86,6 +87,8 @@ public class CategoryService {
 
         restaurantUser.getRestaurant().setCategorySequence(currentCategorySequence);
         restaurantRepo.save(restaurantUser.getRestaurant());
+
+        deactivateCategoryJob();
     }
 
     public void updateCategory(CategoryUpdateRq categoryUpdateRq, RestaurantUser restaurantUser, Locale locale) {
@@ -103,6 +106,8 @@ public class CategoryService {
         category.setDeactivationDate(Utility.parseDateFromString(categoryUpdateRq.getDeactivationDate(),"yyyy-MM-dd"));
 
         categoryRepo.save(category);
+
+        deactivateCategoryJob();
     }
 
 
@@ -144,6 +149,14 @@ public class CategoryService {
         category.setStatus(Status.DELETED);
 
         categoryRepo.save(category);
+    }
+
+
+    public void deactivateCategoryJob(){
+
+        LocalDate deactivateDate = LocalDate.now();
+
+        categoryRepo.updateDeactivatedCategory(deactivateDate);
     }
 
 }

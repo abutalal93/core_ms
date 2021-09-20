@@ -2,6 +2,7 @@ package restaurant.ms.core.repositories;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -35,4 +36,11 @@ public interface CategoryRepo extends CrudRepository<Category,String> {
 
 
     public Category findCategoryById(Long categoryId);
+
+
+    @Modifying
+    @Query("update Category cat " +
+            "set cat.status='INACTIVE' " +
+            "where (cat.deactivationDate is not null and cat.deactivationDate <=:deactivateDate)")
+    public void updateDeactivatedCategory(@Param("deactivateDate") LocalDate deactivateDate);
 }

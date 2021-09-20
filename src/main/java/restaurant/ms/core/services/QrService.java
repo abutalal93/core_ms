@@ -17,6 +17,8 @@ import restaurant.ms.core.entities.*;
 import restaurant.ms.core.enums.Status;
 import restaurant.ms.core.exceptions.HttpServiceException;
 import restaurant.ms.core.repositories.*;
+import restaurant.ms.core.security.AES;
+import restaurant.ms.core.utils.Utility;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -43,6 +45,9 @@ public class QrService {
 
     @Autowired
     private OrderRepo orderRepo;
+
+    @Autowired
+    private AES aes;
 
     public PageRs searchQr(RestaurantUser restaurantUser,Integer page, Integer size, Locale locale) {
         if (page == null)
@@ -77,7 +82,7 @@ public class QrService {
 
         qrRepo.save(qr);
 
-        qr.setCode(qrUrl.replace("QR_ID", qr.getId() + ""));
+        qr.setCode(qrUrl.replace("QR_ID", aes.encrypt(qr.getId() + "")));
 
         qrRepo.save(qr);
     }
@@ -139,7 +144,15 @@ public class QrService {
     }
 
 
-    public QrInfoRs qrInfo(Long qrId, Locale locale) {
+    public QrInfoRs qrInfo(String qrIdEncrypted, Locale locale) {
+
+        String decryptedQrId = (aes.decrypt(qrIdEncrypted));
+
+        Long qrId = Utility.parseLong(decryptedQrId);
+
+        if(qrId == null){
+            qrId = Utility.parseLong(qrIdEncrypted);
+        }
 
         Qr qr = qrRepo.findQrById(qrId);
 

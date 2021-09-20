@@ -9,6 +9,7 @@ import restaurant.ms.core.dto.responses.CategorySearchRs;
 import restaurant.ms.core.dto.responses.ItemInfoRs;
 import restaurant.ms.core.dto.responses.ItemSearchRs;
 import restaurant.ms.core.enums.Status;
+import restaurant.ms.core.enums.TaxType;
 import restaurant.ms.core.utils.Utility;
 
 import javax.persistence.*;
@@ -68,6 +69,13 @@ public class Item {
     @Column(name = "deactivation_date")
     private LocalDate deactivationDate;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tax_type")
+    private TaxType taxType;
+
+    @Column(name = "tax_percent")
+    private BigDecimal tax;
+
     public ItemSearchRs toItemSearchRs(){
         ItemSearchRs itemSearchRs = new ItemSearchRs();
 
@@ -81,6 +89,8 @@ public class Item {
         itemSearchRs.setId(this.id);
         itemSearchRs.setCategoryId(this.category.getId());
         itemSearchRs.setDeactivationDate(Utility.parseDateFromString(deactivationDate,"yyyy-MM-dd"));
+        itemSearchRs.setTaxType(this.taxType != null ? this.taxType.name(): null);
+        itemSearchRs.setTax(this.tax == null ? BigDecimal.ZERO: this.tax);
 
         return itemSearchRs;
     }
@@ -98,6 +108,8 @@ public class Item {
         itemInfoRs.setId(this.id);
         itemInfoRs.setCategoryId(this.category.getId());
         itemInfoRs.setDeactivationDate(Utility.parseDateFromString(deactivationDate,"yyyy-MM-hh"));
+        itemInfoRs.setTaxType(this.taxType != null ? this.taxType.name(): null);
+        itemInfoRs.setTax(this.tax == null ? BigDecimal.ZERO: this.tax);
 
 
         return itemInfoRs;

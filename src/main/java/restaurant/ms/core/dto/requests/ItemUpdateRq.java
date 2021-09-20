@@ -19,4 +19,6 @@ public class ItemUpdateRq {
     private String description;
     private Long categoryId;
     private String deactivationDate;
+    private String taxType;
+    private BigDecimal tax;
 }

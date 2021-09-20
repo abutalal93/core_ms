@@ -73,6 +73,7 @@ public class RestUserService {
         RestUserLoginRs.setLastName(restaurantUser.getLastName());
         RestUserLoginRs.setToken(token);
         RestUserLoginRs.setAvatar(restaurantUser.getRestaurant().getLogo());
+        RestUserLoginRs.setType(restaurantUser.getRestaurantUserType().name());
 
         return RestUserLoginRs;
     }
@@ -108,7 +109,7 @@ public class RestUserService {
         if (size == null)
             size = 10;
 
-        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "id");
 
         Page<RestaurantUser> restUserPage = restaurantUserRepo.findAllBy(restaurantUser.getRestaurant(),pageable);
 

@@ -8,6 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import restaurant.ms.core.dto.requests.ItemCreateRq;
@@ -18,12 +21,14 @@ import restaurant.ms.core.entities.Category;
 import restaurant.ms.core.entities.Item;
 import restaurant.ms.core.entities.RestaurantUser;
 import restaurant.ms.core.enums.Status;
+import restaurant.ms.core.enums.TaxType;
 import restaurant.ms.core.exceptions.HttpServiceException;
 import restaurant.ms.core.repositories.ItemRepo;
 import restaurant.ms.core.repositories.RestaurantRepo;
 import restaurant.ms.core.utils.Utility;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -82,12 +87,16 @@ public class ItemService {
         item.setCategory(new Category(itemCreateRq.getCategoryId()));
         item.setDescription(itemCreateRq.getDescription());
         item.setDeactivationDate(Utility.parseDateFromString(itemCreateRq.getDeactivationDate(),"yyyy-MM-dd"));
+        item.setTaxType(TaxType.valueOf(itemCreateRq.getTaxType()));
+        item.setTax(itemCreateRq.getTax());
 
         itemRepo.save(item);
 
 
         restaurantUser.getRestaurant().setItemSequence(currentItemSequence);
         restaurantRepo.save(restaurantUser.getRestaurant());
+
+        deactivateItemJob();
     }
 
     public void updateItem(ItemUpdateRq itemUpdateRq, RestaurantUser restaurantUser, Locale locale) {
@@ -106,8 +115,12 @@ public class ItemService {
         item.setCategory(new Category(itemUpdateRq.getCategoryId()));
         item.setDescription(itemUpdateRq.getDescription());
         item.setDeactivationDate(Utility.parseDateFromString(itemUpdateRq.getDeactivationDate(),"yyyy-MM-dd"));
+        item.setTaxType(TaxType.valueOf(itemUpdateRq.getTaxType()));
+        item.setTax(itemUpdateRq.getTax());
 
         itemRepo.save(item);
+
+        deactivateItemJob();
     }
 
 
@@ -132,6 +145,8 @@ public class ItemService {
         }
 
         itemRepo.save(item);
+
+        deactivateItemJob();
     }
 
     public void deleteItem(Long itemId, RestaurantUser restaurantUser, Locale locale) {
@@ -149,6 +164,14 @@ public class ItemService {
         item.setStatus(Status.DELETED);
 
         itemRepo.save(item);
+    }
+
+
+    public void deactivateItemJob(){
+
+        LocalDate deactivateDate = LocalDate.now();
+
+        itemRepo.updateDeactivatedItem(deactivateDate);
     }
 
 }
