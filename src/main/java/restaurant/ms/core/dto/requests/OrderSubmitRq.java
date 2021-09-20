@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderSubmitRq {
 
-    private Long qrId;
+    private String qrId;
     private String name;
     private String mobile;
     private String email;

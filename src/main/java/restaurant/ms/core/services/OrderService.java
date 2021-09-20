@@ -19,6 +19,7 @@ import restaurant.ms.core.enums.RestaurantUserType;
 import restaurant.ms.core.enums.Status;
 import restaurant.ms.core.exceptions.HttpServiceException;
 import restaurant.ms.core.repositories.*;
+import restaurant.ms.core.security.AES;
 import restaurant.ms.core.utils.Utility;
 
 import javax.transaction.Transactional;
@@ -49,6 +50,9 @@ public class OrderService {
 
     @Autowired
     private OrderTrackRepo orderTrackRepo;
+
+    @Autowired
+    private AES aes;
 
     public PageRs searchOrder(RestaurantUser restaurantUser,Integer page, Integer size, Locale locale) {
         if (page == null)
@@ -113,6 +117,14 @@ public class OrderService {
 
     public String createOrder(OrderSubmitRq orderSubmitRq, Locale locale) {
 
+        String qrIdDecrypted = aes.decrypt(orderSubmitRq.getQrId());
+
+        Long qrId = Utility.parseLong(qrIdDecrypted);
+
+        if(qrIdDecrypted == null){
+            qrId = Utility.parseLong(orderSubmitRq.getQrId());
+        }
+
         Order order = new Order();
         order.setCreateDate(LocalDateTime.now());
         order.setReference(System.currentTimeMillis()+"");
@@ -121,7 +133,7 @@ public class OrderService {
         order.setMobileNumber(orderSubmitRq.getMobile());
         order.setTotalAmount(orderSubmitRq.getTotalAmount());
         order.setStatus(OrderStatus.INIT);
-        order.setQr(qrRepo.findQrById(orderSubmitRq.getQrId()));
+        order.setQr((qrRepo.findQrById(qrId)));
         order.setRestaurant(order.getQr() != null ? order.getQr().getRestaurant() : null);
 
         orderRepo.save(order);
