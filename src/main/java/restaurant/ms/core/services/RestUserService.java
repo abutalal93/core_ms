@@ -109,6 +109,10 @@ public class RestUserService {
         if (size == null)
             size = 10;
 
+        if(restaurantUser.getRestaurantUserType().equals(RestaurantUserType.WAITRESS)){
+            throw new HttpServiceException(HttpStatus.UNAUTHORIZED,"user_not_allowed",locale);
+        }
+
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "id");
 
         Page<RestaurantUser> restUserPage = restaurantUserRepo.findAllBy(restaurantUser.getRestaurant(),pageable);

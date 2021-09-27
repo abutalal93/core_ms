@@ -3,6 +3,7 @@ package restaurant.ms.core.dto.responses;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import restaurant.ms.core.dto.requests.ItemSpecsRq;
 
 import java.math.BigDecimal;
 
@@ -24,4 +25,5 @@ public class ItemInfoRs {
     private BigDecimal quantity;
     private String taxType;
     private BigDecimal tax;
+    private ItemSpecsRq itemSpecs;
 }

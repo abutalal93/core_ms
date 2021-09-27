@@ -8,6 +8,7 @@ import lombok.Setter;
 import restaurant.ms.core.dto.responses.CategorySearchRs;
 import restaurant.ms.core.dto.responses.ItemInfoRs;
 import restaurant.ms.core.dto.responses.ItemSearchRs;
+import restaurant.ms.core.enums.DiscountType;
 import restaurant.ms.core.enums.Status;
 import restaurant.ms.core.enums.TaxType;
 import restaurant.ms.core.utils.Utility;
@@ -76,6 +77,18 @@ public class Item {
     @Column(name = "tax_percent")
     private BigDecimal tax;
 
+    @Column(name = "tax_discount")
+    private BigDecimal discount;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "discount_type")
+    private DiscountType discountType;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "item_specs_id")
+    private ItemSpecs itemSpecs;
+
     public ItemSearchRs toItemSearchRs(){
         ItemSearchRs itemSearchRs = new ItemSearchRs();
 
@@ -91,7 +104,7 @@ public class Item {
         itemSearchRs.setDeactivationDate(Utility.parseDateFromString(deactivationDate,"yyyy-MM-dd"));
         itemSearchRs.setTaxType(this.taxType != null ? this.taxType.name(): null);
         itemSearchRs.setTax(this.tax == null ? BigDecimal.ZERO: this.tax);
-
+        itemSearchRs.setSpecsId(this.itemSpecs != null ? this.itemSpecs.getId(): null);
         return itemSearchRs;
     }
 
@@ -110,7 +123,7 @@ public class Item {
         itemInfoRs.setDeactivationDate(Utility.parseDateFromString(deactivationDate,"yyyy-MM-hh"));
         itemInfoRs.setTaxType(this.taxType != null ? this.taxType.name(): null);
         itemInfoRs.setTax(this.tax == null ? BigDecimal.ZERO: this.tax);
-
+        itemInfoRs.setItemSpecs(this.itemSpecs != null ? this.itemSpecs.toItemSpecsRq(): null);
 
         return itemInfoRs;
     }

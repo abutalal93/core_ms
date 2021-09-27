@@ -14,6 +14,7 @@ import restaurant.ms.core.dto.requests.RestaurantCreateRq;
 import restaurant.ms.core.dto.requests.RestaurantUpdateRq;
 import restaurant.ms.core.dto.responses.*;
 import restaurant.ms.core.entities.*;
+import restaurant.ms.core.enums.RestaurantUserType;
 import restaurant.ms.core.enums.Status;
 import restaurant.ms.core.exceptions.HttpServiceException;
 import restaurant.ms.core.repositories.*;
@@ -21,6 +22,7 @@ import restaurant.ms.core.security.AES;
 import restaurant.ms.core.utils.Utility;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -54,6 +56,10 @@ public class QrService {
             page = 0;
         if (size == null)
             size = 10;
+
+        if(restaurantUser.getRestaurantUserType().equals(RestaurantUserType.WAITRESS)){
+            throw new HttpServiceException(HttpStatus.UNAUTHORIZED,"user_not_allowed",locale);
+        }
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id");
 
@@ -169,6 +175,7 @@ public class QrService {
         qrInfoRs.setBrandName(qr.getRestaurant().getBrandNameEn());
         qrInfoRs.setLogo(qr.getRestaurant().getLogo());
         qrInfoRs.setCategoryList(categoryInfo(qr,locale));
+        qrInfoRs.setServiceFees(qr.getRestaurant().getServiceFees() != null ? qr.getRestaurant().getServiceFees() : BigDecimal.ZERO);
 
         List<Order> orderList = orderRepo.findCurrentRunningOrder(qr);
 

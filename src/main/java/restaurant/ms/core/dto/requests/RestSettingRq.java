@@ -1,22 +1,23 @@
-package restaurant.ms.core.dto.responses;
+package restaurant.ms.core.dto.requests;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Setter
 @Getter
 @NoArgsConstructor
-public class QrInfoRs {
+public class RestSettingRq {
 
     private Long id;
-    private String brandName;
     private String logo;
+    private String qrLogo;
+    private String brandNameEn;
+    private String brandNameAr;
     private BigDecimal serviceFees;
-    private List<CategoryInfoRs> categoryList;
-    private List<OrderSearchRs> orderList;
+    private List<ItemSpecsRq> specsList;
+
 }

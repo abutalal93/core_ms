@@ -17,6 +17,7 @@ import restaurant.ms.core.dto.responses.CategorySearchRs;
 import restaurant.ms.core.entities.Category;
 import restaurant.ms.core.entities.Restaurant;
 import restaurant.ms.core.entities.RestaurantUser;
+import restaurant.ms.core.enums.RestaurantUserType;
 import restaurant.ms.core.enums.Status;
 import restaurant.ms.core.exceptions.HttpServiceException;
 import restaurant.ms.core.repositories.CategoryRepo;
@@ -46,6 +47,10 @@ public class CategoryService {
             page = 0;
         if (size == null)
             size = 10;
+
+        if(restaurantUser.getRestaurantUserType().equals(RestaurantUserType.WAITRESS)){
+            throw new HttpServiceException(HttpStatus.UNAUTHORIZED,"user_not_allowed",locale);
+        }
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id");
 
@@ -124,6 +129,9 @@ public class CategoryService {
         }
 
         if(category.getStatus().equals(Status.INACTIVE)){
+            if(category.getDeactivationDate() != null){
+                category.setDeactivationDate(null);
+            }
             category.setStatus(Status.ACTIVE);
         }else{
             if(category.getStatus().equals(Status.ACTIVE)){
@@ -132,8 +140,6 @@ public class CategoryService {
         }
 
         categoryRepo.save(category);
-
-        deactivateCategoryJob();
     }
 
     public void deleteCategory(Long categoryId, RestaurantUser restaurantUser, Locale locale) {

@@ -3,7 +3,8 @@ package restaurant.ms.core.dto.requests;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import restaurant.ms.core.entities.Category;
+import restaurant.ms.core.entities.ItemSpecs;
+import restaurant.ms.core.enums.Status;
 
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
@@ -13,16 +14,10 @@ import java.math.BigDecimal;
 @Setter
 @Getter
 @NoArgsConstructor
-public class ItemCreateRq {
+public class ItemDetailRq {
 
+    private Long id;
     private String nameEn;
     private String nameAr;
-    private String avatar;
     private BigDecimal unitPrice;
-    private String description;
-    private Long categoryId;
-    private String deactivationDate;
-    private String taxType;
-    private BigDecimal tax;
-    private Long specsId;
 }

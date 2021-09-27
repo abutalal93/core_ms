@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import restaurant.ms.core.enums.DiscountType;
 import restaurant.ms.core.enums.Status;
+import restaurant.ms.core.enums.TaxType;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -41,4 +43,18 @@ public class OrderItem {
 
     @Column(name = "line_total")
     private BigDecimal lineTotal;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tax_type")
+    private TaxType taxType;
+
+    @Column(name = "tax_percent")
+    private BigDecimal tax;
+
+    @Column(name = "tax_discount")
+    private BigDecimal discount;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "discount_type")
+    private DiscountType discountType;
 }

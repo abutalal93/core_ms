@@ -19,7 +19,9 @@ import restaurant.ms.core.dto.responses.ItemSearchRs;
 import restaurant.ms.core.dto.responses.PageRs;
 import restaurant.ms.core.entities.Category;
 import restaurant.ms.core.entities.Item;
+import restaurant.ms.core.entities.ItemSpecs;
 import restaurant.ms.core.entities.RestaurantUser;
+import restaurant.ms.core.enums.RestaurantUserType;
 import restaurant.ms.core.enums.Status;
 import restaurant.ms.core.enums.TaxType;
 import restaurant.ms.core.exceptions.HttpServiceException;
@@ -48,6 +50,10 @@ public class ItemService {
             page = 0;
         if (size == null)
             size = 10;
+
+        if(restaurantUser.getRestaurantUserType().equals(RestaurantUserType.WAITRESS)){
+            throw new HttpServiceException(HttpStatus.UNAUTHORIZED,"user_not_allowed",locale);
+        }
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id");
 
@@ -89,6 +95,7 @@ public class ItemService {
         item.setDeactivationDate(Utility.parseDateFromString(itemCreateRq.getDeactivationDate(),"yyyy-MM-dd"));
         item.setTaxType(TaxType.valueOf(itemCreateRq.getTaxType()));
         item.setTax(itemCreateRq.getTax());
+        item.setItemSpecs(new ItemSpecs(itemCreateRq.getSpecsId()));
 
         itemRepo.save(item);
 
@@ -117,6 +124,7 @@ public class ItemService {
         item.setDeactivationDate(Utility.parseDateFromString(itemUpdateRq.getDeactivationDate(),"yyyy-MM-dd"));
         item.setTaxType(TaxType.valueOf(itemUpdateRq.getTaxType()));
         item.setTax(itemUpdateRq.getTax());
+        item.setItemSpecs(new ItemSpecs(itemUpdateRq.getSpecsId()));
 
         itemRepo.save(item);
 
@@ -137,6 +145,9 @@ public class ItemService {
         }
 
         if(item.getStatus().equals(Status.INACTIVE)){
+            if(item.getDeactivationDate() != null){
+                item.setDeactivationDate(null);
+            }
             item.setStatus(Status.ACTIVE);
         }else{
             if(item.getStatus().equals(Status.ACTIVE)){

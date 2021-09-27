@@ -21,4 +21,5 @@ public class ItemUpdateRq {
     private String deactivationDate;
     private String taxType;
     private BigDecimal tax;
+    private Long specsId;
 }

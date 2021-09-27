@@ -10,6 +10,7 @@ import restaurant.ms.core.configrations.MessageEnvelope;
 import restaurant.ms.core.dto.requests.*;
 import restaurant.ms.core.dto.responses.OrderInfoRs;
 import restaurant.ms.core.dto.responses.PageRs;
+import restaurant.ms.core.dto.responses.RestSettingRs;
 import restaurant.ms.core.dto.responses.RestUserLoginRs;
 import restaurant.ms.core.entities.RestaurantUser;
 import restaurant.ms.core.exceptions.HttpServiceException;
@@ -37,6 +38,9 @@ public class RestController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private RestaurantService restaurantService;
 
     @RequestMapping(value = "/user/login",method = RequestMethod.POST)
     public ResponseEntity<MessageEnvelope> userLogin(HttpServletRequest httpServletRequest,
@@ -173,6 +177,37 @@ public class RestController {
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
         restUserService.changeRestUserPassword(changeRestUserPasswordRq,restaurantUser,locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+    ////////////////////////////////////////////////////////////////////
+
+    @RequestMapping(value = "/setting",method = RequestMethod.GET)
+    public ResponseEntity<MessageEnvelope> findRestSetting(HttpServletRequest httpServletRequest) {
+
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        RestSettingRs restSettingRs = restaurantService.findRestSetting(restaurantUser,locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", restSettingRs, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/setting",method = RequestMethod.POST)
+    public ResponseEntity<MessageEnvelope> findRestSetting(HttpServletRequest httpServletRequest,
+                                                           @RequestBody RestSettingRq restSettingRq) {
+
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        restaurantService.saveRestSetting(restSettingRq,restaurantUser,locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 

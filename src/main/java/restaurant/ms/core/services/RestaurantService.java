@@ -9,12 +9,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import restaurant.ms.core.dto.requests.RestaurantCreateRq;
-import restaurant.ms.core.dto.requests.RestaurantUpdateRq;
-import restaurant.ms.core.dto.requests.SpLoginRq;
-import restaurant.ms.core.dto.responses.PageRs;
-import restaurant.ms.core.dto.responses.RestaurantSearchRs;
-import restaurant.ms.core.dto.responses.SpLoginRs;
+import restaurant.ms.core.dto.requests.*;
+import restaurant.ms.core.dto.responses.*;
 import restaurant.ms.core.entities.*;
 import restaurant.ms.core.enums.RestaurantType;
 import restaurant.ms.core.enums.RestaurantUserType;
@@ -55,6 +51,12 @@ public class RestaurantService {
     @Autowired
     private DistrictRepo districtRepo;
 
+    @Autowired
+    private ItemSpecsRepo itemSpecsRepo;
+
+    @Autowired
+    private ItemDetailRepo itemDetailRepo;
+
 
     public PageRs searchRestaurant(Integer page,Integer size, Locale locale){
         if (page == null)
@@ -77,6 +79,104 @@ public class RestaurantService {
                 .collect(Collectors.toList());
 
         return new PageRs(restaurantPage.getTotalElements(), restaurantPage.getTotalPages(), restaurantSearchRsList);
+    }
+
+    public RestSettingRs findRestSetting(RestaurantUser restaurantUser, Locale locale){
+
+        if(restaurantUser.getRestaurantUserType().equals(RestaurantUserType.WAITRESS)){
+            throw new HttpServiceException(HttpStatus.UNAUTHORIZED,"user_not_allowed",locale);
+        }
+
+        Restaurant currentRest = restaurantRepo.findRestaurantById(restaurantUser.getRestaurant().getId());
+
+        if(currentRest == null){
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST,"Rest not found");
+        }
+
+        RestSettingRs restaurantSetting = new RestSettingRs();
+
+        restaurantSetting.setId(currentRest.getId());
+        restaurantSetting.setLogo(currentRest.getLogo());
+        restaurantSetting.setBrandNameEn(currentRest.getBrandNameEn());
+        restaurantSetting.setBrandNameAr(currentRest.getBrandNameAr());
+        restaurantSetting.setQrLogo(currentRest.getQrLogo());
+        restaurantSetting.setServiceFees(currentRest.getServiceFees());
+
+        List<ItemSpecs> itemSpecsList = itemSpecsRepo.findAllBy(currentRest);
+
+        if(itemSpecsList != null){
+            List<ItemSpecsRq> itemSpecsRqList = itemSpecsList.stream()
+                    .map(itemSpecs -> itemSpecs.toItemSpecsRq())
+                    .collect(Collectors.toList());
+
+            restaurantSetting.setSpecsList(itemSpecsRqList);
+        }
+
+        return restaurantSetting;
+    }
+
+    public void saveRestSetting(RestSettingRq restSettingRq, RestaurantUser restaurantUser, Locale locale){
+
+        if(restaurantUser.getRestaurantUserType().equals(RestaurantUserType.WAITRESS)){
+            throw new HttpServiceException(HttpStatus.UNAUTHORIZED,"user_not_allowed",locale);
+        }
+
+        Restaurant currentRest = restaurantRepo.findRestaurantById(restSettingRq.getId());
+
+        if(currentRest == null){
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST,"Rest not found");
+        }
+
+        currentRest.setLogo(restSettingRq.getLogo());
+        currentRest.setQrLogo(restSettingRq.getQrLogo());
+        currentRest.setBrandNameEn(restSettingRq.getBrandNameEn());
+        currentRest.setBrandNameAr(restSettingRq.getBrandNameAr());
+        currentRest.setServiceFees(restSettingRq.getServiceFees());
+
+        restaurantRepo.save(currentRest);
+
+        if(restSettingRq.getSpecsList() != null){
+
+            for(ItemSpecsRq itemSpecsRq: restSettingRq.getSpecsList()){
+                ItemSpecs itemSpecs = itemSpecsRepo.findItemSpecsById(itemSpecsRq.getId());
+                if(itemSpecs != null){
+                    itemSpecs = itemSpecsRepo.findItemSpecsById(itemSpecsRq.getId());
+                    itemSpecs.setRestaurant(currentRest);
+                    itemSpecs.setRestaurantUser(restaurantUser);
+                    itemSpecs.setAlias(itemSpecsRq.getAlias());
+                    itemSpecs.setStatus(Status.ACTIVE);
+                }else {
+                    itemSpecs = new ItemSpecs();
+                    itemSpecs.setRestaurant(currentRest);
+                    itemSpecs.setRestaurantUser(restaurantUser);
+                    itemSpecs.setAlias(itemSpecsRq.getAlias());
+                    itemSpecs.setStatus(Status.ACTIVE);
+                }
+
+                itemSpecsRepo.save(itemSpecs);
+
+                List<ItemDetailRq> itemDetailRqList = itemSpecsRq.getDetailList();
+                if(itemDetailRqList != null){
+                    if(itemSpecs.getId() != null){
+                        itemDetailRepo.deleteAllByItemSpecs(itemSpecs);
+                    }
+
+                    List<ItemDetail> itemDetailList = new ArrayList<>();
+                    for(ItemDetailRq itemDetailRq: itemDetailRqList){
+                        ItemDetail itemDetail = new ItemDetail();
+                        itemDetail.setItemSpecs(itemSpecs);
+                        itemDetail.setNameAr(itemDetailRq.getNameAr());
+                        itemDetail.setNameEn(itemDetailRq.getNameEn());
+                        itemDetail.setUnitPrice(itemDetailRq.getUnitPrice());
+                        itemDetailList.add(itemDetail);
+                    }
+                    itemDetailRepo.saveAll(itemDetailList);
+                }
+
+
+            }
+
+        }
     }
 
     public void createRestaurant(RestaurantCreateRq restaurantCreateRq,SpUser spUser, Locale locale){

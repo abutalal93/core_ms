@@ -10,6 +10,7 @@ import restaurant.ms.core.enums.ServiceType;
 import restaurant.ms.core.enums.Status;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -124,6 +125,12 @@ public class Restaurant {
 
     @Column(name = "item_sequence")
     private Long itemSequence;
+
+    @Column(name = "qr_logo")
+    private String qrLogo;
+
+    @Column(name = "service_fees")
+    private BigDecimal serviceFees;
 
     public RestaurantSearchRs toRestaurantSearchRs(){
         RestaurantSearchRs restaurantSearchRs = new RestaurantSearchRs();
