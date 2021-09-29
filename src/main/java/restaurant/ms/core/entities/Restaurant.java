@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import restaurant.ms.core.dto.responses.RestaurantSearchRs;
+import restaurant.ms.core.enums.CalculationType;
 import restaurant.ms.core.enums.RestaurantType;
 import restaurant.ms.core.enums.ServiceType;
 import restaurant.ms.core.enums.Status;
@@ -128,6 +129,10 @@ public class Restaurant {
 
     @Column(name = "qr_logo")
     private String qrLogo;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "calculation_type")
+    private CalculationType calculationType;
 
     @Column(name = "service_fees")
     private BigDecimal serviceFees;

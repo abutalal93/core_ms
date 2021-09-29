@@ -20,6 +20,6 @@ public class RestSettingRs {
     private String brandNameEn;
     private String brandNameAr;
     private BigDecimal serviceFees;
+    private String calculationType;
     private List<ItemSpecsRq> specsList;
-
 }

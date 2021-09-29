@@ -12,10 +12,7 @@ import org.springframework.stereotype.Service;
 import restaurant.ms.core.dto.requests.*;
 import restaurant.ms.core.dto.responses.*;
 import restaurant.ms.core.entities.*;
-import restaurant.ms.core.enums.RestaurantType;
-import restaurant.ms.core.enums.RestaurantUserType;
-import restaurant.ms.core.enums.ServiceType;
-import restaurant.ms.core.enums.Status;
+import restaurant.ms.core.enums.*;
 import restaurant.ms.core.exceptions.HttpServiceException;
 import restaurant.ms.core.repositories.*;
 import restaurant.ms.core.security.JwtTokenProvider;
@@ -101,6 +98,7 @@ public class RestaurantService {
         restaurantSetting.setBrandNameAr(currentRest.getBrandNameAr());
         restaurantSetting.setQrLogo(currentRest.getQrLogo());
         restaurantSetting.setServiceFees(currentRest.getServiceFees());
+        restaurantSetting.setCalculationType(currentRest.getCalculationType() != null ? currentRest.getCalculationType().name() : null);
 
         List<ItemSpecs> itemSpecsList = itemSpecsRepo.findAllBy(currentRest);
 
@@ -132,6 +130,7 @@ public class RestaurantService {
         currentRest.setBrandNameEn(restSettingRq.getBrandNameEn());
         currentRest.setBrandNameAr(restSettingRq.getBrandNameAr());
         currentRest.setServiceFees(restSettingRq.getServiceFees());
+        currentRest.setCalculationType(CalculationType.getValue(restSettingRq.getCalculationType()));
 
         restaurantRepo.save(currentRest);
 
@@ -175,7 +174,16 @@ public class RestaurantService {
 
 
             }
+        }
 
+        if(restSettingRq.getDeletedSpecsIdList() != null){
+            for(Long id: restSettingRq.getDeletedSpecsIdList()){
+                ItemSpecs itemSpecs = itemSpecsRepo.findItemSpecsById(id);
+                if(itemSpecs != null){
+                    itemSpecs.setStatus(Status.DELETED);
+                    itemSpecsRepo.save(itemSpecs);
+                }
+            }
         }
     }
 

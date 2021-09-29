@@ -16,6 +16,7 @@ public class QrInfoRs {
     private Long id;
     private String brandName;
     private String logo;
+    private String serviceFeesType;
     private BigDecimal serviceFees;
     private List<CategoryInfoRs> categoryList;
     private List<OrderSearchRs> orderList;

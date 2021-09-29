@@ -175,6 +175,7 @@ public class QrService {
         qrInfoRs.setBrandName(qr.getRestaurant().getBrandNameEn());
         qrInfoRs.setLogo(qr.getRestaurant().getLogo());
         qrInfoRs.setCategoryList(categoryInfo(qr,locale));
+        qrInfoRs.setServiceFeesType(qr.getRestaurant().getCalculationType() != null ? qr.getRestaurant().getCalculationType().name() : "FIXED");
         qrInfoRs.setServiceFees(qr.getRestaurant().getServiceFees() != null ? qr.getRestaurant().getServiceFees() : BigDecimal.ZERO);
 
         List<Order> orderList = orderRepo.findCurrentRunningOrder(qr);
