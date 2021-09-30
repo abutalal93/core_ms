@@ -23,8 +23,10 @@ import restaurant.ms.core.security.AES;
 import restaurant.ms.core.utils.Utility;
 
 import javax.transaction.Transactional;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -290,6 +292,42 @@ public class OrderService {
         orderInfoRs.setTrackList(trackList);
 
         return orderInfoRs;
+    }
+
+    public void cancelOrderJob() {
+
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        System.out.println("cancelOrderJob: "+currentDateTime);
+
+        List<Order> orderList = orderRepo.findAllRunningOrders(currentDateTime);
+
+        if (orderList == null) {
+            return;
+        }
+
+        System.out.println("size: "+orderList.size());
+
+        orderList.forEach(order -> {
+
+            Duration duration = Duration.between(order.getCreateDate(),currentDateTime);
+            if(duration.toMinutes() > 5){
+                System.out.println("cancel: "+order.getReference());
+                order.setStatus(OrderStatus.CANCELED);
+
+                orderRepo.save(order);
+
+                OrderTrack orderTrackCancel = new OrderTrack();
+                orderTrackCancel.setOrder(order);
+                orderTrackCancel.setCreateDate(LocalDateTime.now());
+                orderTrackCancel.setUserReference("System");
+                orderTrackCancel.setStatus(OrderStatus.CANCELED);
+
+                orderTrackRepo.save(orderTrackCancel);
+            }
+        });
+
+        return;
     }
 
 }

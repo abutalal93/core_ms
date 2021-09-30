@@ -44,4 +44,9 @@ public interface OrderRepo extends CrudRepository<Order,String> {
                             @Param("toDate")LocalDateTime toDate,
                             Pageable pageable);
 
+
+    @Query("select ord from Order ord " +
+            "where (ord.status ='INIT' or ord.status ='APPROVED') and (ord.createDate<=:currentDate)")
+    List<Order> findAllRunningOrders(LocalDateTime currentDate);
+
 }

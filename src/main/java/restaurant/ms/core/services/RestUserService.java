@@ -173,6 +173,11 @@ public class RestUserService {
 
     public void changeRestUserPassword(ChangeRestUserPasswordRq changeRestUserPasswordRq, RestaurantUser restaurantUser, Locale locale) {
 
+        String currentPassword = changeRestUserPasswordRq.getCurrentPassword();
+        if(!passwordEncoder.matches(currentPassword,restaurantUser.getPassword())){
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST,"Current Password Invalid");
+        }
+
         restaurantUser.setPassword(passwordEncoder.encode(changeRestUserPasswordRq.getNewPassword()));
 
         restaurantUserRepo.save(restaurantUser);
