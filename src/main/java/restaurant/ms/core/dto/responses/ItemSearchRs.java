@@ -27,5 +27,6 @@ public class ItemSearchRs {
     private Long specsId;
     private String deactivationDate;
     private String taxType;
+    private String categoryName;
     private BigDecimal tax;
 }

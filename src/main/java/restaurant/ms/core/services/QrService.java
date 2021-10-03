@@ -51,6 +51,9 @@ public class QrService {
     @Autowired
     private AES aes;
 
+    @Autowired
+    private DiscountItemRepo discountItemRepo;
+
     public PageRs searchQr(RestaurantUser restaurantUser,Integer page, Integer size, Locale locale) {
         if (page == null)
             page = 0;
@@ -215,6 +218,16 @@ public class QrService {
             List<ItemInfoRs> itemInfoRsList = itemList.stream()
                     .map(item -> item.toItemInfoRs())
                     .collect(Collectors.toList());
+
+            //find item discount:
+            LocalDateTime current = LocalDateTime.now();
+            itemInfoRsList.forEach(itemInfoRs -> {
+                List<DiscountItem> discountItemList = discountItemRepo.findDiscountItem(current,itemInfoRs.getId());
+                if(discountItemList != null && !discountItemList.isEmpty()){
+                    Discount discount = discountItemList.get(0).getDiscount();
+                    itemInfoRs.setDiscount(discount.toDiscountInfoRs());
+                }
+            });
 
             categoryInfoRs.setItemList(itemInfoRsList);
         }

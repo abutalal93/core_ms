@@ -105,6 +105,7 @@ public class Item {
         itemSearchRs.setTaxType(this.taxType != null ? this.taxType.name(): null);
         itemSearchRs.setTax(this.tax == null ? BigDecimal.ZERO: this.tax);
         itemSearchRs.setSpecsId(this.itemSpecs != null ? this.itemSpecs.getId(): null);
+        itemSearchRs.setCategoryName(this.category != null ? this.category.getNameEn(): null);
         return itemSearchRs;
     }
 
@@ -123,7 +124,7 @@ public class Item {
         itemInfoRs.setDeactivationDate(Utility.parseDateFromString(deactivationDate,"yyyy-MM-hh"));
         itemInfoRs.setTaxType(this.taxType != null ? this.taxType.name(): null);
         itemInfoRs.setTax(this.tax == null ? BigDecimal.ZERO: this.tax);
-        itemInfoRs.setItemSpecs(this.itemSpecs != null ? this.itemSpecs.toItemSpecsRq(): null);
+        itemInfoRs.setItemSpecs(this.itemSpecs != null && this.itemSpecs.getStatus().equals(Status.ACTIVE) ? this.itemSpecs.toItemSpecsRq(): null);
 
         return itemInfoRs;
     }

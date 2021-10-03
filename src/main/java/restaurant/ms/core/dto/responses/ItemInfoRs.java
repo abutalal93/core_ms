@@ -26,4 +26,5 @@ public class ItemInfoRs {
     private String taxType;
     private BigDecimal tax;
     private ItemSpecsRq itemSpecs;
+    private DiscountInfoRs discount;
 }

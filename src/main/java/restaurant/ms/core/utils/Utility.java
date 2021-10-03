@@ -48,6 +48,20 @@ public class Utility {
         }
     }
 
+    public static LocalDateTime parseDateTimeFromString(String date, String pattern) {
+        if (date == null || date.isEmpty()) {
+            return null;
+        }
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+            LocalDateTime localDateTime = LocalDateTime.parse(date.trim(), formatter);
+            return localDateTime;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
     public static String parseDateFromString(LocalDate localDate, String pattern) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
