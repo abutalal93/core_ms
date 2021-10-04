@@ -95,7 +95,11 @@ public class ItemService {
         item.setDeactivationDate(Utility.parseDateFromString(itemCreateRq.getDeactivationDate(),"yyyy-MM-dd"));
         item.setTaxType(TaxType.valueOf(itemCreateRq.getTaxType()));
         item.setTax(itemCreateRq.getTax());
-        item.setItemSpecs(new ItemSpecs(itemCreateRq.getSpecsId()));
+
+        if(itemCreateRq.getSpecsId() != null){
+            item.setItemSpecs(new ItemSpecs(itemCreateRq.getSpecsId()));
+        }
+
 
         itemRepo.save(item);
 
@@ -124,7 +128,11 @@ public class ItemService {
         item.setDeactivationDate(Utility.parseDateFromString(itemUpdateRq.getDeactivationDate(),"yyyy-MM-dd"));
         item.setTaxType(TaxType.valueOf(itemUpdateRq.getTaxType()));
         item.setTax(itemUpdateRq.getTax());
-        item.setItemSpecs(new ItemSpecs(itemUpdateRq.getSpecsId()));
+
+        if(itemUpdateRq.getSpecsId() != null){
+            item.setItemSpecs(new ItemSpecs(itemUpdateRq.getSpecsId()));
+        }
+
 
         itemRepo.save(item);
 
