@@ -204,8 +204,7 @@ public class QrService {
         }
 
         List<CategoryInfoRs> categoryInfoRsList = categoryList.stream()
-                .map(category -> category.toCategoryInfoRs())
-                .collect(Collectors.toList());
+                .map(category -> category.
 
         for(CategoryInfoRs categoryInfoRs: categoryInfoRsList){
 
