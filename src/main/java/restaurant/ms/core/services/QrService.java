@@ -180,6 +180,7 @@ public class QrService {
         qrInfoRs.setCategoryList(categoryInfo(qr,locale));
         qrInfoRs.setServiceFeesType(qr.getRestaurant().getCalculationType() != null ? qr.getRestaurant().getCalculationType().name() : "FIXED");
         qrInfoRs.setServiceFees(qr.getRestaurant().getServiceFees() != null ? qr.getRestaurant().getServiceFees() : BigDecimal.ZERO);
+        qrInfoRs.setRestId(qr.getRestaurant().getId());
 
         List<Order> orderList = orderRepo.findCurrentRunningOrder(qr);
 

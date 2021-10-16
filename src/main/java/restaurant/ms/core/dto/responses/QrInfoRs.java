@@ -14,6 +14,7 @@ import java.util.List;
 public class QrInfoRs {
 
     private Long id;
+    private Long restId;
     private String brandName;
     private String logo;
     private String serviceFeesType;
