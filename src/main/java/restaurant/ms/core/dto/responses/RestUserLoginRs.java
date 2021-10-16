@@ -17,6 +17,7 @@ public class RestUserLoginRs {
     private String token;
     private String avatar;
     private String type;
+    private Long restId;
 
     @JsonIgnore
     private String password;
