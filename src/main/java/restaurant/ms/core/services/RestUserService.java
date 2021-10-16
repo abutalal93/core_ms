@@ -74,7 +74,7 @@ public class RestUserService {
         RestUserLoginRs.setToken(token);
         RestUserLoginRs.setAvatar(restaurantUser.getRestaurant().getLogo());
         RestUserLoginRs.setType(restaurantUser.getRestaurantUserType().name());
-        RestUserLoginRs.setRestId(restaurantUser.getId());
+        RestUserLoginRs.setRestId(restaurantUser.getRestaurant().getId());
 
         return RestUserLoginRs;
     }
