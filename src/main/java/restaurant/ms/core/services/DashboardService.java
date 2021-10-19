@@ -95,12 +95,22 @@ public class DashboardService {
             Long countOfChartAllOrders = orderRepo.countOfOrderByRest(restaurant,null,startChartTime,endChartTime);
             BigDecimal sumOfChartAllOrders = orderRepo.sumOfOrderByRest(restaurant,null,startChartTime,endChartTime);
 
+            Long countOfChartClosedOrders = orderRepo.countOfOrderByRest(restaurant, OrderStatus.CLOSED,startChartTime,endChartTime);
+            BigDecimal sumOfChartClosedOrders = orderRepo.sumOfOrderByRest(restaurant,OrderStatus.CLOSED,startChartTime,endChartTime);
+            dashboardRestRs.setClosedOrder(new DashboardValue(countOfClosedOrders,sumOfClosedOrders));
+
+            Long countOfChartCanceledOrders = orderRepo.countOfOrderByRest(restaurant,OrderStatus.CANCELED,startChartTime,endChartTime);
+            BigDecimal sumOfChartCanceledOrders = orderRepo.sumOfOrderByRest(restaurant,OrderStatus.CANCELED,startChartTime,endChartTime);
+            dashboardRestRs.setCanceledOrder(new DashboardValue(countOfCanceledOrders,sumOfCanceledOrders));
+
             DashboardPeriod dashboardPeriod = new DashboardPeriod();
             dashboardPeriod.setLabel("Hours");
             dashboardPeriod.setAlias((hour+1)+"");
             dashboardPeriod.setStartDateTime(startChartTime);
             dashboardPeriod.setEndDateTime(endChartTime);
-            dashboardPeriod.setDashboardValue(new DashboardValue(countOfChartAllOrders,sumOfChartAllOrders));
+            dashboardPeriod.setAllOrder(new DashboardValue(countOfChartAllOrders,sumOfChartAllOrders));
+            dashboardPeriod.setClosedOrder(new DashboardValue(countOfChartClosedOrders,sumOfChartClosedOrders));
+            dashboardPeriod.setCanceledOrder(new DashboardValue(countOfChartCanceledOrders,sumOfChartCanceledOrders));
 
             startChartTime = startChartTime.plusHours(1);
             endChartTime = endChartTime.plusHours(1);
@@ -148,12 +158,22 @@ public class DashboardService {
             Long countOfChartAllOrders = orderRepo.countOfOrderByRest(restaurant,null,startChartTime,endChartTime);
             BigDecimal sumOfChartAllOrders = orderRepo.sumOfOrderByRest(restaurant,null,startChartTime,endChartTime);
 
+            Long countOfChartClosedOrders = orderRepo.countOfOrderByRest(restaurant, OrderStatus.CLOSED,startChartTime,endChartTime);
+            BigDecimal sumOfChartClosedOrders = orderRepo.sumOfOrderByRest(restaurant,OrderStatus.CLOSED,startChartTime,endChartTime);
+            dashboardRestRs.setClosedOrder(new DashboardValue(countOfClosedOrders,sumOfClosedOrders));
+
+            Long countOfChartCanceledOrders = orderRepo.countOfOrderByRest(restaurant,OrderStatus.CANCELED,startChartTime,endChartTime);
+            BigDecimal sumOfChartCanceledOrders = orderRepo.sumOfOrderByRest(restaurant,OrderStatus.CANCELED,startChartTime,endChartTime);
+            dashboardRestRs.setCanceledOrder(new DashboardValue(countOfCanceledOrders,sumOfCanceledOrders));
+
             DashboardPeriod dashboardPeriod = new DashboardPeriod();
             dashboardPeriod.setLabel("Days");
             dashboardPeriod.setAlias(day+"");
             dashboardPeriod.setStartDateTime(startChartTime);
             dashboardPeriod.setEndDateTime(endChartTime);
-            dashboardPeriod.setDashboardValue(new DashboardValue(countOfChartAllOrders,sumOfChartAllOrders));
+            dashboardPeriod.setAllOrder(new DashboardValue(countOfChartAllOrders,sumOfChartAllOrders));
+            dashboardPeriod.setClosedOrder(new DashboardValue(countOfChartClosedOrders,sumOfChartClosedOrders));
+            dashboardPeriod.setCanceledOrder(new DashboardValue(countOfChartCanceledOrders,sumOfChartCanceledOrders));
 
             startChartTime = startChartTime.plusDays(1);
             endChartTime = endChartTime.plusDays(1);
@@ -201,12 +221,22 @@ public class DashboardService {
             Long countOfChartAllOrders = orderRepo.countOfOrderByRest(restaurant,null,startChartTime,endChartTime);
             BigDecimal sumOfChartAllOrders = orderRepo.sumOfOrderByRest(restaurant,null,startChartTime,endChartTime);
 
+            Long countOfChartClosedOrders = orderRepo.countOfOrderByRest(restaurant, OrderStatus.CLOSED,startChartTime,endChartTime);
+            BigDecimal sumOfChartClosedOrders = orderRepo.sumOfOrderByRest(restaurant,OrderStatus.CLOSED,startChartTime,endChartTime);
+            dashboardRestRs.setClosedOrder(new DashboardValue(countOfClosedOrders,sumOfClosedOrders));
+
+            Long countOfChartCanceledOrders = orderRepo.countOfOrderByRest(restaurant,OrderStatus.CANCELED,startChartTime,endChartTime);
+            BigDecimal sumOfChartCanceledOrders = orderRepo.sumOfOrderByRest(restaurant,OrderStatus.CANCELED,startChartTime,endChartTime);
+            dashboardRestRs.setCanceledOrder(new DashboardValue(countOfCanceledOrders,sumOfCanceledOrders));
+
             DashboardPeriod dashboardPeriod = new DashboardPeriod();
             dashboardPeriod.setLabel("Month");
             dashboardPeriod.setAlias(Month.of(month).name());
             dashboardPeriod.setStartDateTime(startChartTime);
             dashboardPeriod.setEndDateTime(endChartTime);
-            dashboardPeriod.setDashboardValue(new DashboardValue(countOfChartAllOrders,sumOfChartAllOrders));
+            dashboardPeriod.setAllOrder(new DashboardValue(countOfChartAllOrders,sumOfChartAllOrders));
+            dashboardPeriod.setClosedOrder(new DashboardValue(countOfChartClosedOrders,sumOfChartClosedOrders));
+            dashboardPeriod.setCanceledOrder(new DashboardValue(countOfChartCanceledOrders,sumOfChartCanceledOrders));
 
             startChartTime = startChartTime.plusMonths(1);
             endChartTime = endChartTime.plusMonths(1);

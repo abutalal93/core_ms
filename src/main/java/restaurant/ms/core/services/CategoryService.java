@@ -42,7 +42,13 @@ public class CategoryService {
     private RestaurantRepo restaurantRepo;
 
 
-    public PageRs searchCategory(RestaurantUser restaurantUser,Integer page, Integer size, Locale locale) {
+    public PageRs searchCategory(RestaurantUser restaurantUser,
+                                 String code,
+                                 String nameEn,
+                                 String nameAr,
+                                 Integer page,
+                                 Integer size,
+                                 Locale locale) {
         if (page == null)
             page = 0;
         if (size == null)

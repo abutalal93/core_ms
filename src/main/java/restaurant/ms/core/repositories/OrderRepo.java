@@ -24,6 +24,12 @@ public interface OrderRepo extends CrudRepository<Order,String> {
     Page<Order> findCurrentRunningOrderByRest(Restaurant restaurant,Pageable pageable);
 
     @Query("select ord from Order ord " +
+            "where ord.restaurant=:restaurant " +
+            "and ord.qr.id=:qrId " +
+            "and (ord.status ='INIT' or ord.status ='APPROVED' or ord.status ='PAY_REQUEST' or ord.status ='PAID' or ord.status ='DELIVERED' )")
+    Page<Order> findCurrentRunningOrderByRest(Long qrId, Restaurant restaurant,Pageable pageable);
+
+    @Query("select ord from Order ord " +
             "where ord.qr=:qr")
     Page<Order> findAllByQr(Qr qr, Pageable pageable);
 

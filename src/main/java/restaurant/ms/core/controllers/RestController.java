@@ -316,13 +316,16 @@ public class RestController {
 
     @RequestMapping(value = "/category/search",method = RequestMethod.GET)
     public ResponseEntity<MessageEnvelope> searchCategory(HttpServletRequest httpServletRequest,
+                                                          @RequestParam(value = "code", required = false) String code,
+                                                          @RequestParam(value = "nameEn", required = false) String nameEn,
+                                                          @RequestParam(value = "nameAr", required = false) String nameAr,
                                                           @RequestParam(value = "page", required = false) Integer page,
                                                           @RequestParam(value = "size", required = false) Integer size) {
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        PageRs pageRs = categoryService.searchCategory(restaurantUser,page,size,locale);
+        PageRs pageRs = categoryService.searchCategory(restaurantUser, code, nameEn, nameAr, page, size, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", pageRs, locale);
 
@@ -626,13 +629,14 @@ public class RestController {
 
     @RequestMapping(value = "/order/search",method = RequestMethod.GET)
     public ResponseEntity<MessageEnvelope> searchOrder(HttpServletRequest httpServletRequest,
+                                                       @RequestParam(value = "qrId", required = false) Long qrId,
                                                       @RequestParam(value = "page", required = false) Integer page,
                                                       @RequestParam(value = "size", required = false) Integer size) {
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        PageRs pageRs = orderService.searchOrder(restaurantUser,page,size,locale);
+        PageRs pageRs = orderService.searchOrder(qrId,restaurantUser,page,size,locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", pageRs, locale);
 

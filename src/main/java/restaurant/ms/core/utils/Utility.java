@@ -83,4 +83,11 @@ public class Utility {
             return null;
         }
     }
+
+    public static String toQueryString(String value){
+        if(value == null || value.isEmpty() || value.trim().isEmpty()){
+            return null;
+        }
+        return value;
+    }
 }

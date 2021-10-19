@@ -56,7 +56,7 @@ public class OrderService {
     @Autowired
     private AES aes;
 
-    public PageRs searchOrder(RestaurantUser restaurantUser,Integer page, Integer size, Locale locale) {
+    public PageRs searchOrder(Long qrId, RestaurantUser restaurantUser,Integer page, Integer size, Locale locale) {
         if (page == null)
             page = 0;
         if (size == null)
@@ -64,7 +64,12 @@ public class OrderService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id");
 
-        Page<Order> orderPage = orderRepo.findCurrentRunningOrderByRest(restaurantUser.getRestaurant(),pageable);
+        Page<Order> orderPage = null;
+        if(qrId == null || qrId == 0 ){
+            orderPage = orderRepo.findCurrentRunningOrderByRest(restaurantUser.getRestaurant(),pageable);
+        }else{
+            orderPage = orderRepo.findCurrentRunningOrderByRest(qrId,restaurantUser.getRestaurant(),pageable);
+        }
 
         List<Order> orderList = orderPage.getContent();
 

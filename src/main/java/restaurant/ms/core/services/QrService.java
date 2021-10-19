@@ -60,9 +60,9 @@ public class QrService {
         if (size == null)
             size = 10;
 
-        if(restaurantUser.getRestaurantUserType().equals(RestaurantUserType.WAITRESS)){
-            throw new HttpServiceException(HttpStatus.UNAUTHORIZED,"user_not_allowed",locale);
-        }
+//        if(restaurantUser.getRestaurantUserType().equals(RestaurantUserType.WAITRESS)){
+//            throw new HttpServiceException(HttpStatus.UNAUTHORIZED,"user_not_allowed",locale);
+//        }
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id");
 

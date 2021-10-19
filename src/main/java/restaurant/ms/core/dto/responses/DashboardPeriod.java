@@ -15,5 +15,8 @@ public class DashboardPeriod {
     private String alias;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
-    private DashboardValue dashboardValue;
+    private DashboardValue allOrder;
+    private DashboardValue pendingOrder;
+    private DashboardValue closedOrder;
+    private DashboardValue canceledOrder;
 }
