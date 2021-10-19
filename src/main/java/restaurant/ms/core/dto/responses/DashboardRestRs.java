@@ -16,10 +16,9 @@ public class DashboardRestRs {
     private DashboardValue closedOrder;
     private DashboardValue canceledOrder;
 
-    private List<TopTenRs> topTenCategory;
-    private List<TopTenRs> topTenItem;
-    private List<TopTenRs> topTenQr;
-    private List<TopTenRs> topTenUser;
+    private List<ItemSearchRs> topTenItem;
+    private List<QrSearchRs> topTenQr;
+    private List<RestUserSearchRs> topTenUser;
 
     private List<DashboardPeriod> genericChart;
 }

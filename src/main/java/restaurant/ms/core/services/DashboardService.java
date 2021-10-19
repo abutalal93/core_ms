@@ -16,10 +16,7 @@ import restaurant.ms.core.enums.OrderStatus;
 import restaurant.ms.core.enums.RestaurantUserType;
 import restaurant.ms.core.enums.Status;
 import restaurant.ms.core.exceptions.HttpServiceException;
-import restaurant.ms.core.repositories.DiscountItemRepo;
-import restaurant.ms.core.repositories.DiscountRepo;
-import restaurant.ms.core.repositories.OrderRepo;
-import restaurant.ms.core.repositories.RestaurantRepo;
+import restaurant.ms.core.repositories.*;
 import restaurant.ms.core.utils.Utility;
 
 import javax.transaction.Transactional;
@@ -40,6 +37,15 @@ public class DashboardService {
 
     @Autowired
     private OrderRepo orderRepo;
+
+    @Autowired
+    private ItemRepo itemRepo;
+
+    @Autowired
+    private QrRepo qrRepo;
+
+    @Autowired
+    private RestaurantUserRepo restaurantUserRepo;
 
     public DashboardRestRs generateRestDashboard(RestaurantUser restaurantUser, String dashboardType, Locale locale) {
 
@@ -119,6 +125,27 @@ public class DashboardService {
         }
 
         dashboardRestRs.setGenericChart(dashboardPeriodList);
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        List<Item> itemList = itemRepo.findAllBy(restaurant,pageable).getContent();
+        List<ItemSearchRs> itemSearchRsList = itemList.stream()
+                .map(item -> item.toItemSearchRs())
+                .collect(Collectors.toList());
+
+        List<Qr> qrList = qrRepo.findAllByRestaurant(restaurant,pageable).getContent();
+        List<QrSearchRs> qrSearchRsList = qrList.stream()
+                .map(item -> item.toQrSearchRs())
+                .collect(Collectors.toList());
+
+        List<RestaurantUser> userList = restaurantUserRepo.findAllBy(restaurant,pageable).getContent();
+        List<RestUserSearchRs> restUserSearchRs = userList.stream()
+                .map(item -> item.toRestUserSearchRs())
+                .collect(Collectors.toList());
+
+        dashboardRestRs.setTopTenItem(itemSearchRsList);
+        dashboardRestRs.setTopTenUser(restUserSearchRs);
+        dashboardRestRs.setTopTenQr(qrSearchRsList);
+
         return dashboardRestRs;
     }
 
@@ -182,6 +209,27 @@ public class DashboardService {
         }
 
         dashboardRestRs.setGenericChart(dashboardPeriodList);
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        List<Item> itemList = itemRepo.findAllBy(restaurant,pageable).getContent();
+        List<ItemSearchRs> itemSearchRsList = itemList.stream()
+                .map(item -> item.toItemSearchRs())
+                .collect(Collectors.toList());
+
+        List<Qr> qrList = qrRepo.findAllByRestaurant(restaurant,pageable).getContent();
+        List<QrSearchRs> qrSearchRsList = qrList.stream()
+                .map(item -> item.toQrSearchRs())
+                .collect(Collectors.toList());
+
+        List<RestaurantUser> userList = restaurantUserRepo.findAllBy(restaurant,pageable).getContent();
+        List<RestUserSearchRs> restUserSearchRs = userList.stream()
+                .map(item -> item.toRestUserSearchRs())
+                .collect(Collectors.toList());
+
+        dashboardRestRs.setTopTenItem(itemSearchRsList);
+        dashboardRestRs.setTopTenUser(restUserSearchRs);
+        dashboardRestRs.setTopTenQr(qrSearchRsList);
+
         return dashboardRestRs;
     }
 
@@ -245,6 +293,27 @@ public class DashboardService {
         }
 
         dashboardRestRs.setGenericChart(dashboardPeriodList);
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        List<Item> itemList = itemRepo.findAllBy(restaurant,pageable).getContent();
+        List<ItemSearchRs> itemSearchRsList = itemList.stream()
+                .map(item -> item.toItemSearchRs())
+                .collect(Collectors.toList());
+
+        List<Qr> qrList = qrRepo.findAllByRestaurant(restaurant,pageable).getContent();
+        List<QrSearchRs> qrSearchRsList = qrList.stream()
+                .map(item -> item.toQrSearchRs())
+                .collect(Collectors.toList());
+
+        List<RestaurantUser> userList = restaurantUserRepo.findAllBy(restaurant,pageable).getContent();
+        List<RestUserSearchRs> restUserSearchRs = userList.stream()
+                .map(item -> item.toRestUserSearchRs())
+                .collect(Collectors.toList());
+
+        dashboardRestRs.setTopTenItem(itemSearchRsList);
+        dashboardRestRs.setTopTenUser(restUserSearchRs);
+        dashboardRestRs.setTopTenQr(qrSearchRsList);
+
         return dashboardRestRs;
     }
 
