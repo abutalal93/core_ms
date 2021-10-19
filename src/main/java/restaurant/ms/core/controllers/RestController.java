@@ -8,10 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import restaurant.ms.core.configrations.MessageEnvelope;
 import restaurant.ms.core.dto.requests.*;
-import restaurant.ms.core.dto.responses.OrderInfoRs;
-import restaurant.ms.core.dto.responses.PageRs;
-import restaurant.ms.core.dto.responses.RestSettingRs;
-import restaurant.ms.core.dto.responses.RestUserLoginRs;
+import restaurant.ms.core.dto.responses.*;
 import restaurant.ms.core.entities.RestaurantUser;
 import restaurant.ms.core.exceptions.HttpServiceException;
 import restaurant.ms.core.services.*;
@@ -44,6 +41,9 @@ public class RestController {
 
     @Autowired
     private DiscountService discountService;
+
+    @Autowired
+    private DashboardService dashboardService;
 
     @RequestMapping(value = "/user/login",method = RequestMethod.POST)
     public ResponseEntity<MessageEnvelope> userLogin(HttpServletRequest httpServletRequest,
@@ -723,6 +723,20 @@ public class RestController {
         PageRs pageRs = orderService.searchOrder(restaurantUser,reference,dateFrom,dateTo,page,size,locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", pageRs, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/dashboard",method = RequestMethod.GET)
+    public ResponseEntity<MessageEnvelope> searchOrder(HttpServletRequest httpServletRequest,
+                                                       @RequestParam(value = "type", required = false) String type) {
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        DashboardRestRs dashboardRestRs = dashboardService.generateRestDashboard(restaurantUser,type,locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", dashboardRestRs, locale);
 
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
