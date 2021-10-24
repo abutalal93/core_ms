@@ -60,7 +60,7 @@ public class CategoryService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id");
 
-        Page<Category> categoryPage = categoryRepo.findAllBy(restaurantUser.getRestaurant(),pageable);
+        Page<Category> categoryPage = categoryRepo.findAllBy(restaurantUser.getRestaurant(),Utility.toQueryString(code),Utility.toQueryString(nameEn),Utility.toQueryString(nameAr),pageable);
 
         List<Category> categoryList = categoryPage.getContent();
 

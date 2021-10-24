@@ -76,8 +76,8 @@ public class Discount {
         discountSearchRs.setName(this.name);
         discountSearchRs.setDiscountType(this.discountType.name());
         discountSearchRs.setDiscountValue(this.discountValue);
-        discountSearchRs.setStartDateTime(this.startDateTime);
-        discountSearchRs.setEndDateTime(this.endDateTime);
+        discountSearchRs.setStartDateTime(Utility.parseDateTimeFromString(this.startDateTime,"yyyy-MM-dd'T'HH:mm"));
+        discountSearchRs.setEndDateTime(Utility.parseDateTimeFromString(this.endDateTime,"yyyy-MM-dd'T'HH:mm"));
 
         if(discountItemList != null && !discountItemList.isEmpty()){
             discountSearchRs.setItemList(discountItemList.stream()

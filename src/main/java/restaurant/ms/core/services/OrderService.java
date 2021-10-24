@@ -155,6 +155,8 @@ public class OrderService {
             orderItem.setQuantity(itemInfoRs.getQuantity());
             orderItem.setUnitPrice(item.getUnitPrice());
             orderItem.setLineTotal(orderItem.getQuantity().multiply(orderItem.getUnitPrice()));
+            orderItem.setTax(item.getTax());
+            orderItem.setTaxType(item.getTaxType());
 
             orderItemRepo.save(orderItem);
         }

@@ -3,6 +3,7 @@ package restaurant.ms.core.dto.responses;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import restaurant.ms.core.entities.OrderItem;
 import restaurant.ms.core.entities.Qr;
 import restaurant.ms.core.entities.Restaurant;
 import restaurant.ms.core.enums.OrderStatus;
@@ -10,6 +11,7 @@ import restaurant.ms.core.enums.OrderStatus;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Setter
 @Getter
@@ -27,4 +29,6 @@ public class OrderSearchRs {
     private Long restaurantId;
     private String status;
     private String qrAlias;
+
+    private List<OrderItem> orderItemList;
 }

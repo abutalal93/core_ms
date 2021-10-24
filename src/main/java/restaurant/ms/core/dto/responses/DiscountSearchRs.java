@@ -22,8 +22,8 @@ public class DiscountSearchRs {
     private String name;
     private String discountType;
     private BigDecimal discountValue;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
+    private String startDateTime;
+    private String endDateTime;
     private String status;
     private List<ItemSearchRs> itemList;
 }

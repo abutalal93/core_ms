@@ -422,13 +422,17 @@ public class RestController {
 
     @RequestMapping(value = "/item/search",method = RequestMethod.GET)
     public ResponseEntity<MessageEnvelope> searchItem(HttpServletRequest httpServletRequest,
+                                                          @RequestParam(value = "code", required = false) String code,
+                                                          @RequestParam(value = "nameEn", required = false) String nameEn,
+                                                          @RequestParam(value = "nameAr", required = false) String nameAr,
+                                                          @RequestParam(value = "categoryId", required = false) Long categoryId,
                                                           @RequestParam(value = "page", required = false) Integer page,
                                                           @RequestParam(value = "size", required = false) Integer size) {
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        PageRs pageRs = itemService.searchItem(restaurantUser,page,size,locale);
+        PageRs pageRs = itemService.searchItem(restaurantUser,code,nameEn,nameAr,categoryId,page,size,locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", pageRs, locale);
 

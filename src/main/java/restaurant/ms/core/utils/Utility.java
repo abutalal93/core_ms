@@ -7,6 +7,7 @@ import com.google.i18n.phonenumbers.Phonenumber;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class Utility {
 
@@ -62,6 +63,17 @@ public class Utility {
         }
     }
 
+    public static String parseDateTimeFromString(LocalDateTime dateTime, String pattern) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+            String localDateTimeString = dateTime.format(formatter);
+            return localDateTimeString;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
     public static String parseDateFromString(LocalDate localDate, String pattern) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
@@ -88,6 +100,6 @@ public class Utility {
         if(value == null || value.isEmpty() || value.trim().isEmpty()){
             return null;
         }
-        return value;
+        return value.toLowerCase();
     }
 }

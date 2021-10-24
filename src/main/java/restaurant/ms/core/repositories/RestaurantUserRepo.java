@@ -17,7 +17,7 @@ public interface RestaurantUserRepo extends CrudRepository<RestaurantUser,String
     public List<RestaurantUser> findAll();
 
     @Query("select restaurantUser from RestaurantUser restaurantUser " +
-            "where restaurantUser.username=:username " +
+            "where lower(restaurantUser.username)=:username " +
             "and restaurantUser.status <>'DELETED'")
     public RestaurantUser findRestaurantUserByUsername(@Param("username") String username);
 

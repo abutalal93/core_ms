@@ -11,6 +11,7 @@ import restaurant.ms.core.enums.OrderStatus;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "request")
@@ -55,6 +56,9 @@ public class Order {
     @Column(name = "status")
     private OrderStatus status;
 
+    @OneToMany(mappedBy = "order")
+    private List<OrderItem> orderItemList;
+
     public OrderSearchRs toOrderSearchRs(){
 
         OrderSearchRs orderSearchRs = new OrderSearchRs();
@@ -70,6 +74,10 @@ public class Order {
         orderSearchRs.setStatus(this.status.name());
         orderSearchRs.setTotalAmount(this.totalAmount);
         orderSearchRs.setQrAlias(this.qr.getAlias());
+
+        if(this.orderItemList != null){
+            orderSearchRs.setOrderItemList(this.orderItemList);
+        }
 
         return orderSearchRs;
     }

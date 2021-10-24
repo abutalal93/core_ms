@@ -45,7 +45,7 @@ public class RestUserService {
 
     public RestUserLoginRs loginRestUser(SpLoginRq spLoginRq, Locale locale){
 
-        RestaurantUser restaurantUser = restaurantUserRepo.findRestaurantUserByUsername(spLoginRq.getUsername());
+        RestaurantUser restaurantUser = restaurantUserRepo.findRestaurantUserByUsername(spLoginRq.getUsername().toLowerCase());
 
         if(restaurantUser == null){
             throw new HttpServiceException(HttpStatus.BAD_REQUEST,"user_not_found",locale);

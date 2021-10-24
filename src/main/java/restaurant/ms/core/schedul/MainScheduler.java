@@ -15,6 +15,6 @@ public class MainScheduler {
 
     @Scheduled(fixedDelay = 20000)
     public void cancelBillDailyJob() {
-        orderService.cancelOrderJob();
+        //orderService.cancelOrderJob();
     }
 }

@@ -45,7 +45,14 @@ public class ItemService {
     @Autowired
     private RestaurantRepo restaurantRepo;
 
-    public PageRs searchItem(RestaurantUser restaurantUser,Integer page, Integer size, Locale locale) {
+    public PageRs searchItem(RestaurantUser restaurantUser,
+                             String code,
+                             String nameEn,
+                             String nameAr,
+                             Long categoryId,
+                             Integer page,
+                             Integer size,
+                             Locale locale) {
         if (page == null)
             page = 0;
         if (size == null)
@@ -57,7 +64,7 @@ public class ItemService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id");
 
-        Page<Item> itemPage = itemRepo.findAllBy(restaurantUser.getRestaurant(),pageable);
+        Page<Item> itemPage = itemRepo.findAllBy(restaurantUser.getRestaurant(),Utility.toQueryString(code),Utility.toQueryString(nameEn),Utility.toQueryString(nameAr),categoryId,pageable);
 
         List<Item> itemList = itemPage.getContent();
 
