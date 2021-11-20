@@ -45,19 +45,19 @@ public class RestController {
     @Autowired
     private DashboardService dashboardService;
 
-    @RequestMapping(value = "/user/login",method = RequestMethod.POST)
+    @RequestMapping(value = "/user/login", method = RequestMethod.POST)
     public ResponseEntity<MessageEnvelope> userLogin(HttpServletRequest httpServletRequest,
-                                                      @RequestBody SpLoginRq spLoginRq) {
+                                                     @RequestBody SpLoginRq spLoginRq) {
         Locale locale = httpServletRequest.getLocale();
 
-        RestUserLoginRs restUserLoginRs = restUserService.loginRestUser(spLoginRq,locale);
+        RestUserLoginRs restUserLoginRs = restUserService.loginRestUser(spLoginRq, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", restUserLoginRs, locale);
 
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/user/refresh",method = RequestMethod.GET)
+    @RequestMapping(value = "/user/refresh", method = RequestMethod.GET)
     public ResponseEntity<MessageEnvelope> userLogin(HttpServletRequest httpServletRequest) {
 
         Locale locale = httpServletRequest.getLocale();
@@ -72,20 +72,20 @@ public class RestController {
         RestUserLoginRs.setAvatar(restaurantUser.getRestaurant().getLogo());
         RestUserLoginRs.setType(restaurantUser.getRestaurantUserType().name());
 
-        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", RestUserLoginRs, locale);
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", restaurantUser, locale);
 
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/user/search",method = RequestMethod.GET)
+    @RequestMapping(value = "/user/search", method = RequestMethod.GET)
     public ResponseEntity<MessageEnvelope> searchUser(HttpServletRequest httpServletRequest,
-                                                    @RequestParam(value = "page", required = false) Integer page,
-                                                    @RequestParam(value = "size", required = false) Integer size) {
+                                                      @RequestParam(value = "page", required = false) Integer page,
+                                                      @RequestParam(value = "size", required = false) Integer size) {
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        PageRs pageRs = restUserService.searchUser(restaurantUser,page,size,locale);
+        PageRs pageRs = restUserService.searchUser(restaurantUser, page, size, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", pageRs, locale);
 
@@ -93,7 +93,7 @@ public class RestController {
     }
 
 
-    @RequestMapping(value = "/user/add",method = RequestMethod.POST)
+    @RequestMapping(value = "/user/add", method = RequestMethod.POST)
     public ResponseEntity<MessageEnvelope> addUser(HttpServletRequest httpServletRequest,
                                                    @RequestBody RestUserCreateRq restUserCreateRq) {
 
@@ -102,11 +102,11 @@ public class RestController {
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
         try {
-            restUserService.createRestUser(restUserCreateRq,restaurantUser,locale);
-        }catch (DataIntegrityViolationException ex){
+            restUserService.createRestUser(restUserCreateRq, restaurantUser, locale);
+        } catch (DataIntegrityViolationException ex) {
             String message = ex.getMessage();
 
-            if(message != null && message.contains("username_unique")){
+            if (message != null && message.contains("username_unique")) {
                 throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Username alias already exist", locale);
             }
 
@@ -118,20 +118,20 @@ public class RestController {
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/user/update",method = RequestMethod.POST)
+    @RequestMapping(value = "/user/update", method = RequestMethod.POST)
     public ResponseEntity<MessageEnvelope> upadteUser(HttpServletRequest httpServletRequest,
-                                                   @RequestBody RestUserUpdateRq restUserUpdateRq) {
+                                                      @RequestBody RestUserUpdateRq restUserUpdateRq) {
 
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
         try {
-            restUserService.updateRestUser(restUserUpdateRq,restaurantUser,locale);
-        }catch (DataIntegrityViolationException ex){
+            restUserService.updateRestUser(restUserUpdateRq, restaurantUser, locale);
+        } catch (DataIntegrityViolationException ex) {
             String message = ex.getMessage();
 
-            if(message != null && message.contains("username_unique")){
+            if (message != null && message.contains("username_unique")) {
                 throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Username alias already exist", locale);
             }
 
@@ -143,43 +143,56 @@ public class RestController {
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/user/activeInactive",method = RequestMethod.PUT)
+    @RequestMapping(value = "/user/activeInactive", method = RequestMethod.PUT)
     public ResponseEntity<MessageEnvelope> activeOrInactiveUser(HttpServletRequest httpServletRequest,
-                                                              @RequestParam(value = "userId", required = false) Long userId) {
+                                                                @RequestParam(value = "userId", required = false) Long userId) {
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        restUserService.activeOrInactiveRestUser(userId,restaurantUser,locale);
+        restUserService.activeOrInactiveRestUser(userId, restaurantUser, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/user/delete",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/user/delete", method = RequestMethod.DELETE)
     public ResponseEntity<MessageEnvelope> deleteUser(HttpServletRequest httpServletRequest,
-                                                    @RequestParam(value = "userId", required = false) Long userId) {
+                                                      @RequestParam(value = "userId", required = false) Long userId) {
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        restUserService.deleteRestUser(userId,restaurantUser,locale);
+        restUserService.deleteRestUser(userId, restaurantUser, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/user/changePass",method = RequestMethod.POST)
+    @RequestMapping(value = "/user/changePass", method = RequestMethod.POST)
     public ResponseEntity<MessageEnvelope> changeUserPassword(HttpServletRequest httpServletRequest,
-                                                      @RequestBody ChangeRestUserPasswordRq changeRestUserPasswordRq) {
+                                                              @RequestBody ChangeRestUserPasswordRq changeRestUserPasswordRq) {
 
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        restUserService.changeRestUserPassword(changeRestUserPasswordRq,restaurantUser,locale);
+        restUserService.changeRestUserPassword(changeRestUserPasswordRq, restaurantUser, locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/user/forget", method = RequestMethod.POST)
+    public ResponseEntity<MessageEnvelope> forgetPasswordStepOne(HttpServletRequest httpServletRequest,
+                                                                 @RequestBody ForgetRestUserPasswordRq forgetRestUserPasswordRq) {
+
+        Locale locale = httpServletRequest.getLocale();
+
+        restUserService.resetPasswordForUser(forgetRestUserPasswordRq, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 
@@ -188,21 +201,21 @@ public class RestController {
 
     ////////////////////////////////////////////////////////////////////
 
-    @RequestMapping(value = "/setting",method = RequestMethod.GET)
+    @RequestMapping(value = "/setting", method = RequestMethod.GET)
     public ResponseEntity<MessageEnvelope> findRestSetting(HttpServletRequest httpServletRequest) {
 
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        RestSettingRs restSettingRs = restaurantService.findRestSetting(restaurantUser,locale);
+        RestSettingRs restSettingRs = restaurantService.findRestSetting(restaurantUser, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", restSettingRs, locale);
 
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/setting",method = RequestMethod.POST)
+    @RequestMapping(value = "/setting", method = RequestMethod.POST)
     public ResponseEntity<MessageEnvelope> findRestSetting(HttpServletRequest httpServletRequest,
                                                            @RequestBody RestSettingRq restSettingRq) {
 
@@ -210,7 +223,7 @@ public class RestController {
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        restaurantService.saveRestSetting(restSettingRq,restaurantUser,locale);
+        restaurantService.saveRestSetting(restSettingRq, restaurantUser, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 
@@ -219,7 +232,7 @@ public class RestController {
 
     ////////////////////////////////////////////////////////////////////
 
-    @RequestMapping(value = "/qr/search",method = RequestMethod.GET)
+    @RequestMapping(value = "/qr/search", method = RequestMethod.GET)
     public ResponseEntity<MessageEnvelope> searchQr(HttpServletRequest httpServletRequest,
                                                     @RequestParam(value = "page", required = false) Integer page,
                                                     @RequestParam(value = "size", required = false) Integer size) {
@@ -227,7 +240,7 @@ public class RestController {
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        PageRs pageRs = qrService.searchQr(restaurantUser,page,size,locale);
+        PageRs pageRs = qrService.searchQr(restaurantUser, page, size, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", pageRs, locale);
 
@@ -235,7 +248,7 @@ public class RestController {
     }
 
 
-    @RequestMapping(value = "/qr/create",method = RequestMethod.POST)
+    @RequestMapping(value = "/qr/create", method = RequestMethod.POST)
     public ResponseEntity<MessageEnvelope> createQr(HttpServletRequest httpServletRequest,
                                                     @RequestBody QrCreateRq qrCreateRq) {
         Locale locale = httpServletRequest.getLocale();
@@ -243,11 +256,11 @@ public class RestController {
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
         try {
-            qrService.createQr(qrCreateRq,restaurantUser,locale);
-        }catch (DataIntegrityViolationException ex){
+            qrService.createQr(qrCreateRq, restaurantUser, locale);
+        } catch (DataIntegrityViolationException ex) {
             String message = ex.getMessage();
 
-            if(message != null && message.contains("qralias")){
+            if (message != null && message.contains("qralias")) {
                 throw new HttpServiceException(HttpStatus.BAD_REQUEST, "QR alias already exist", locale);
             }
 
@@ -260,7 +273,7 @@ public class RestController {
     }
 
 
-    @RequestMapping(value = "/qr/update",method = RequestMethod.POST)
+    @RequestMapping(value = "/qr/update", method = RequestMethod.POST)
     public ResponseEntity<MessageEnvelope> updateQr(HttpServletRequest httpServletRequest,
                                                     @RequestBody QrUpdateRq qrUpdateRq) {
         Locale locale = httpServletRequest.getLocale();
@@ -268,11 +281,11 @@ public class RestController {
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
         try {
-            qrService.updateQr(qrUpdateRq,restaurantUser,locale);
-        }catch (DataIntegrityViolationException ex){
+            qrService.updateQr(qrUpdateRq, restaurantUser, locale);
+        } catch (DataIntegrityViolationException ex) {
             String message = ex.getMessage();
 
-            if(message != null && message.contains("qralias")){
+            if (message != null && message.contains("qralias")) {
                 throw new HttpServiceException(HttpStatus.BAD_REQUEST, "QR alias already exist", locale);
             }
 
@@ -284,28 +297,28 @@ public class RestController {
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/qr/activeInactive",method = RequestMethod.PUT)
+    @RequestMapping(value = "/qr/activeInactive", method = RequestMethod.PUT)
     public ResponseEntity<MessageEnvelope> activeOrInactiveQr(HttpServletRequest httpServletRequest,
                                                               @RequestParam(value = "qrId", required = false) Long qrId) {
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        qrService.activeOrInactiveQr(qrId,restaurantUser,locale);
+        qrService.activeOrInactiveQr(qrId, restaurantUser, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/qr/delete",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/qr/delete", method = RequestMethod.DELETE)
     public ResponseEntity<MessageEnvelope> deleteQr(HttpServletRequest httpServletRequest,
                                                     @RequestParam(value = "qrId", required = false) Long qrId) {
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        qrService.deleteQr(qrId,restaurantUser,locale);
+        qrService.deleteQr(qrId, restaurantUser, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 
@@ -314,7 +327,7 @@ public class RestController {
 
     ////////////////////////////////////////////////////////////////////
 
-    @RequestMapping(value = "/category/search",method = RequestMethod.GET)
+    @RequestMapping(value = "/category/search", method = RequestMethod.GET)
     public ResponseEntity<MessageEnvelope> searchCategory(HttpServletRequest httpServletRequest,
                                                           @RequestParam(value = "code", required = false) String code,
                                                           @RequestParam(value = "nameEn", required = false) String nameEn,
@@ -333,7 +346,7 @@ public class RestController {
     }
 
 
-    @RequestMapping(value = "/category/create",method = RequestMethod.POST)
+    @RequestMapping(value = "/category/create", method = RequestMethod.POST)
     public ResponseEntity<MessageEnvelope> createCategory(HttpServletRequest httpServletRequest,
                                                           @RequestBody CategoryCreateRq categoryCreateRq) {
         Locale locale = httpServletRequest.getLocale();
@@ -341,15 +354,15 @@ public class RestController {
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
         try {
-            categoryService.createCategory(categoryCreateRq,restaurantUser,locale);
-        }catch (DataIntegrityViolationException ex){
+            categoryService.createCategory(categoryCreateRq, restaurantUser, locale);
+        } catch (DataIntegrityViolationException ex) {
             String message = ex.getMessage();
 
-            if(message != null && message.contains("categoryrestidwithnameen")){
+            if (message != null && message.contains("categoryrestidwithnameen")) {
                 throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in english already exist", locale);
             }
 
-            if(message != null && message.contains("categoryrestidwithnamear")){
+            if (message != null && message.contains("categoryrestidwithnamear")) {
                 throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in arabic already exist", locale);
             }
 
@@ -362,7 +375,7 @@ public class RestController {
     }
 
 
-    @RequestMapping(value = "/category/update",method = RequestMethod.POST)
+    @RequestMapping(value = "/category/update", method = RequestMethod.POST)
     public ResponseEntity<MessageEnvelope> updateCategory(HttpServletRequest httpServletRequest,
                                                           @RequestBody CategoryUpdateRq categoryUpdateRq) {
         Locale locale = httpServletRequest.getLocale();
@@ -370,15 +383,15 @@ public class RestController {
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
         try {
-            categoryService.updateCategory(categoryUpdateRq,restaurantUser,locale);
-        }catch (DataIntegrityViolationException ex){
+            categoryService.updateCategory(categoryUpdateRq, restaurantUser, locale);
+        } catch (DataIntegrityViolationException ex) {
             String message = ex.getMessage();
 
-            if(message != null && message.contains("categoryrestidwithnameen")){
+            if (message != null && message.contains("categoryrestidwithnameen")) {
                 throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in english already exist", locale);
             }
 
-            if(message != null && message.contains("categoryrestidwithnamear")){
+            if (message != null && message.contains("categoryrestidwithnamear")) {
                 throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in arabic already exist", locale);
             }
 
@@ -390,28 +403,28 @@ public class RestController {
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/category/activeInactive",method = RequestMethod.PUT)
+    @RequestMapping(value = "/category/activeInactive", method = RequestMethod.PUT)
     public ResponseEntity<MessageEnvelope> activeOrInactiveCategory(HttpServletRequest httpServletRequest,
                                                                     @RequestParam(value = "categoryId", required = false) Long qrId) {
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        categoryService.activeOrInactiveCategory(qrId,restaurantUser,locale);
+        categoryService.activeOrInactiveCategory(qrId, restaurantUser, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/category/delete",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/category/delete", method = RequestMethod.DELETE)
     public ResponseEntity<MessageEnvelope> deleteCategory(HttpServletRequest httpServletRequest,
                                                           @RequestParam(value = "categoryId", required = false) Long qrId) {
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        categoryService.deleteCategory(qrId,restaurantUser,locale);
+        categoryService.deleteCategory(qrId, restaurantUser, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 
@@ -420,123 +433,19 @@ public class RestController {
 
     ////////////////////////////////////////////////////////////////////
 
-    @RequestMapping(value = "/item/search",method = RequestMethod.GET)
+    @RequestMapping(value = "/item/search", method = RequestMethod.GET)
     public ResponseEntity<MessageEnvelope> searchItem(HttpServletRequest httpServletRequest,
-                                                          @RequestParam(value = "code", required = false) String code,
-                                                          @RequestParam(value = "nameEn", required = false) String nameEn,
-                                                          @RequestParam(value = "nameAr", required = false) String nameAr,
-                                                          @RequestParam(value = "categoryId", required = false) Long categoryId,
-                                                          @RequestParam(value = "page", required = false) Integer page,
-                                                          @RequestParam(value = "size", required = false) Integer size) {
-        Locale locale = httpServletRequest.getLocale();
-
-        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
-
-        PageRs pageRs = itemService.searchItem(restaurantUser,code,nameEn,nameAr,categoryId,page,size,locale);
-
-        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", pageRs, locale);
-
-        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
-    }
-
-
-    @RequestMapping(value = "/item/create",method = RequestMethod.POST)
-    public ResponseEntity<MessageEnvelope> createItem(HttpServletRequest httpServletRequest,
-                                                          @RequestBody ItemCreateRq itemCreateRq) {
-        Locale locale = httpServletRequest.getLocale();
-
-        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
-
-        try {
-            itemService.createItem(itemCreateRq,restaurantUser,locale);
-        }catch (DataIntegrityViolationException ex){
-            String message = ex.getMessage();
-
-            if(message != null && message.contains("itemrestidwithnameen")){
-                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in english already exist", locale);
-            }
-
-            if(message != null && message.contains("itemrestidwithnamear")){
-                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in arabic already exist", locale);
-            }
-
-            throw new HttpServiceException(HttpStatus.BAD_REQUEST, "ٍSomething wrong, please contact system administrator", locale);
-        }
-
-        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
-
-        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
-    }
-
-
-    @RequestMapping(value = "/item/update",method = RequestMethod.POST)
-    public ResponseEntity<MessageEnvelope> updateItem(HttpServletRequest httpServletRequest,
-                                                          @RequestBody ItemUpdateRq itemUpdateRq) {
-        Locale locale = httpServletRequest.getLocale();
-
-        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
-
-        try {
-            itemService.updateItem(itemUpdateRq,restaurantUser,locale);
-        }catch (DataIntegrityViolationException ex){
-            String message = ex.getMessage();
-
-            if(message != null && message.contains("itemrestidwithnameen")){
-                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in english already exist", locale);
-            }
-
-            if(message != null && message.contains("itemrestidwithnamear")){
-                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in arabic already exist", locale);
-            }
-
-            throw new HttpServiceException(HttpStatus.BAD_REQUEST, "ٍSomething wrong, please contact system administrator", locale);
-        }
-
-        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
-
-        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/item/activeInactive",method = RequestMethod.PUT)
-    public ResponseEntity<MessageEnvelope> activeOrInactiveItem(HttpServletRequest httpServletRequest,
-                                                                    @RequestParam(value = "itemId", required = false) Long qrId) {
-        Locale locale = httpServletRequest.getLocale();
-
-        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
-
-        itemService.activeOrInactiveItem(qrId,restaurantUser,locale);
-
-        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
-
-        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/item/delete",method = RequestMethod.DELETE)
-    public ResponseEntity<MessageEnvelope> deleteItem(HttpServletRequest httpServletRequest,
-                                                          @RequestParam(value = "itemId", required = false) Long qrId) {
-        Locale locale = httpServletRequest.getLocale();
-
-        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
-
-        itemService.deleteItem(qrId,restaurantUser,locale);
-
-        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
-
-        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
-    }
-
-
-    ////////////////////////////////////////////////////////////////////
-
-    @RequestMapping(value = "/discount/search",method = RequestMethod.GET)
-    public ResponseEntity<MessageEnvelope> searchDiscount(HttpServletRequest httpServletRequest,
+                                                      @RequestParam(value = "code", required = false) String code,
+                                                      @RequestParam(value = "nameEn", required = false) String nameEn,
+                                                      @RequestParam(value = "nameAr", required = false) String nameAr,
+                                                      @RequestParam(value = "categoryId", required = false) Long categoryId,
                                                       @RequestParam(value = "page", required = false) Integer page,
                                                       @RequestParam(value = "size", required = false) Integer size) {
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        PageRs pageRs = discountService.searchDiscount(restaurantUser,page,size,locale);
+        PageRs pageRs = itemService.searchItem(restaurantUser, code, nameEn, nameAr, categoryId, page, size, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", pageRs, locale);
 
@@ -544,23 +453,23 @@ public class RestController {
     }
 
 
-    @RequestMapping(value = "/discount/create",method = RequestMethod.POST)
-    public ResponseEntity<MessageEnvelope> createDiscount(HttpServletRequest httpServletRequest,
-                                                      @RequestBody DiscountCreateRq discountCreateRq) {
+    @RequestMapping(value = "/item/create", method = RequestMethod.POST)
+    public ResponseEntity<MessageEnvelope> createItem(HttpServletRequest httpServletRequest,
+                                                      @RequestBody ItemCreateRq itemCreateRq) {
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
         try {
-            discountService.createDiscount(discountCreateRq,restaurantUser,locale);
-        }catch (DataIntegrityViolationException ex){
+            itemService.createItem(itemCreateRq, restaurantUser, locale);
+        } catch (DataIntegrityViolationException ex) {
             String message = ex.getMessage();
 
-            if(message != null && message.contains("itemrestidwithnameen")){
+            if (message != null && message.contains("itemrestidwithnameen")) {
                 throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in english already exist", locale);
             }
 
-            if(message != null && message.contains("itemrestidwithnamear")){
+            if (message != null && message.contains("itemrestidwithnamear")) {
                 throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in arabic already exist", locale);
             }
 
@@ -573,7 +482,111 @@ public class RestController {
     }
 
 
-    @RequestMapping(value = "/discount/update",method = RequestMethod.POST)
+    @RequestMapping(value = "/item/update", method = RequestMethod.POST)
+    public ResponseEntity<MessageEnvelope> updateItem(HttpServletRequest httpServletRequest,
+                                                      @RequestBody ItemUpdateRq itemUpdateRq) {
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        try {
+            itemService.updateItem(itemUpdateRq, restaurantUser, locale);
+        } catch (DataIntegrityViolationException ex) {
+            String message = ex.getMessage();
+
+            if (message != null && message.contains("itemrestidwithnameen")) {
+                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in english already exist", locale);
+            }
+
+            if (message != null && message.contains("itemrestidwithnamear")) {
+                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in arabic already exist", locale);
+            }
+
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST, "ٍSomething wrong, please contact system administrator", locale);
+        }
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/item/activeInactive", method = RequestMethod.PUT)
+    public ResponseEntity<MessageEnvelope> activeOrInactiveItem(HttpServletRequest httpServletRequest,
+                                                                @RequestParam(value = "itemId", required = false) Long qrId) {
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        itemService.activeOrInactiveItem(qrId, restaurantUser, locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/item/delete", method = RequestMethod.DELETE)
+    public ResponseEntity<MessageEnvelope> deleteItem(HttpServletRequest httpServletRequest,
+                                                      @RequestParam(value = "itemId", required = false) Long qrId) {
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        itemService.deleteItem(qrId, restaurantUser, locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+
+    ////////////////////////////////////////////////////////////////////
+
+    @RequestMapping(value = "/discount/search", method = RequestMethod.GET)
+    public ResponseEntity<MessageEnvelope> searchDiscount(HttpServletRequest httpServletRequest,
+                                                          @RequestParam(value = "page", required = false) Integer page,
+                                                          @RequestParam(value = "size", required = false) Integer size) {
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        PageRs pageRs = discountService.searchDiscount(restaurantUser, page, size, locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", pageRs, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/discount/create", method = RequestMethod.POST)
+    public ResponseEntity<MessageEnvelope> createDiscount(HttpServletRequest httpServletRequest,
+                                                          @RequestBody DiscountCreateRq discountCreateRq) {
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        try {
+            discountService.createDiscount(discountCreateRq, restaurantUser, locale);
+        } catch (DataIntegrityViolationException ex) {
+            String message = ex.getMessage();
+
+            if (message != null && message.contains("itemrestidwithnameen")) {
+                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in english already exist", locale);
+            }
+
+            if (message != null && message.contains("itemrestidwithnamear")) {
+                throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in arabic already exist", locale);
+            }
+
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST, "ٍSomething wrong, please contact system administrator", locale);
+        }
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/discount/update", method = RequestMethod.POST)
     public ResponseEntity<MessageEnvelope> updateItem(HttpServletRequest httpServletRequest,
                                                       @RequestBody DiscountUpdateRq discountUpdateRq) {
         Locale locale = httpServletRequest.getLocale();
@@ -581,15 +594,15 @@ public class RestController {
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
         try {
-            discountService.updateDiscount(discountUpdateRq,restaurantUser,locale);
-        }catch (DataIntegrityViolationException ex){
+            discountService.updateDiscount(discountUpdateRq, restaurantUser, locale);
+        } catch (DataIntegrityViolationException ex) {
             String message = ex.getMessage();
 
-            if(message != null && message.contains("itemrestidwithnameen")){
+            if (message != null && message.contains("itemrestidwithnameen")) {
                 throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in english already exist", locale);
             }
 
-            if(message != null && message.contains("itemrestidwithnamear")){
+            if (message != null && message.contains("itemrestidwithnamear")) {
                 throw new HttpServiceException(HttpStatus.BAD_REQUEST, "Category name in arabic already exist", locale);
             }
 
@@ -601,28 +614,28 @@ public class RestController {
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/discount/activeInactive",method = RequestMethod.PUT)
+    @RequestMapping(value = "/discount/activeInactive", method = RequestMethod.PUT)
     public ResponseEntity<MessageEnvelope> activeOrInactiveDiscount(HttpServletRequest httpServletRequest,
-                                                                @RequestParam(value = "discountId", required = false) Long discountId) {
+                                                                    @RequestParam(value = "discountId", required = false) Long discountId) {
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        discountService.activeOrInactiveDiscount(discountId,restaurantUser,locale);
+        discountService.activeOrInactiveDiscount(discountId, restaurantUser, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/discount/delete",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/discount/delete", method = RequestMethod.DELETE)
     public ResponseEntity<MessageEnvelope> deleteDiscount(HttpServletRequest httpServletRequest,
-                                                      @RequestParam(value = "discountId", required = false) Long discountId) {
+                                                          @RequestParam(value = "discountId", required = false) Long discountId) {
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        discountService.deleteDiscount(discountId,restaurantUser,locale);
+        discountService.deleteDiscount(discountId, restaurantUser, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 
@@ -631,93 +644,93 @@ public class RestController {
 
     ////////////////////////////////////////////////////////////////////
 
-    @RequestMapping(value = "/order/search",method = RequestMethod.GET)
+    @RequestMapping(value = "/order/search", method = RequestMethod.GET)
     public ResponseEntity<MessageEnvelope> searchOrder(HttpServletRequest httpServletRequest,
                                                        @RequestParam(value = "qrId", required = false) Long qrId,
-                                                      @RequestParam(value = "page", required = false) Integer page,
-                                                      @RequestParam(value = "size", required = false) Integer size) {
+                                                       @RequestParam(value = "page", required = false) Integer page,
+                                                       @RequestParam(value = "size", required = false) Integer size) {
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        PageRs pageRs = orderService.searchOrder(qrId,restaurantUser,page,size,locale);
+        PageRs pageRs = orderService.searchOrder(qrId, restaurantUser, page, size, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", pageRs, locale);
 
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/order/approve",method = RequestMethod.PUT)
+    @RequestMapping(value = "/order/approve", method = RequestMethod.PUT)
     public ResponseEntity<MessageEnvelope> approvePay(HttpServletRequest httpServletRequest,
-                                                    @RequestParam(value = "orderId", required = false) Long orderId) {
+                                                      @RequestParam(value = "orderId", required = false) Long orderId) {
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        orderService.approveOrder(orderId,restaurantUser,locale);
+        orderService.approveOrder(orderId, restaurantUser, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/order/pay",method = RequestMethod.PUT)
+    @RequestMapping(value = "/order/pay", method = RequestMethod.PUT)
     public ResponseEntity<MessageEnvelope> orderPay(HttpServletRequest httpServletRequest,
-                                                                @RequestParam(value = "orderId", required = false) Long orderId) {
-        Locale locale = httpServletRequest.getLocale();
-
-        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
-
-        orderService.payOrder(orderId,restaurantUser,locale);
-
-        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
-
-        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/order/cancel",method = RequestMethod.PUT)
-    public ResponseEntity<MessageEnvelope> orderCancel(HttpServletRequest httpServletRequest,
                                                     @RequestParam(value = "orderId", required = false) Long orderId) {
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        orderService.cancelOrder(orderId,restaurantUser,locale);
+        orderService.payOrder(orderId, restaurantUser, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/order/deliver",method = RequestMethod.PUT)
-    public ResponseEntity<MessageEnvelope> orderDeliver(HttpServletRequest httpServletRequest,
-                                                                @RequestParam(value = "orderId", required = false) Long orderId) {
+    @RequestMapping(value = "/order/cancel", method = RequestMethod.PUT)
+    public ResponseEntity<MessageEnvelope> orderCancel(HttpServletRequest httpServletRequest,
+                                                       @RequestParam(value = "orderId", required = false) Long orderId) {
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        orderService.deliverOrder(orderId,restaurantUser,locale);
+        orderService.cancelOrder(orderId, restaurantUser, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
 
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/order/timeline",method = RequestMethod.GET)
-    public ResponseEntity<MessageEnvelope> orderTimeline(HttpServletRequest httpServletRequest,
+    @RequestMapping(value = "/order/deliver", method = RequestMethod.PUT)
+    public ResponseEntity<MessageEnvelope> orderDeliver(HttpServletRequest httpServletRequest,
                                                         @RequestParam(value = "orderId", required = false) Long orderId) {
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        OrderInfoRs orderInfoRs = orderService.findOrderInfo(orderId,locale);
+        orderService.deliverOrder(orderId, restaurantUser, locale);
+
+        MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", null, locale);
+
+        return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/order/timeline", method = RequestMethod.GET)
+    public ResponseEntity<MessageEnvelope> orderTimeline(HttpServletRequest httpServletRequest,
+                                                         @RequestParam(value = "orderId", required = false) Long orderId) {
+        Locale locale = httpServletRequest.getLocale();
+
+        RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
+
+        OrderInfoRs orderInfoRs = orderService.findOrderInfo(orderId, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", orderInfoRs, locale);
 
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/order/history",method = RequestMethod.GET)
+    @RequestMapping(value = "/order/history", method = RequestMethod.GET)
     public ResponseEntity<MessageEnvelope> searchOrder(HttpServletRequest httpServletRequest,
                                                        @RequestParam(value = "reference", required = false) String reference,
                                                        @RequestParam(value = "dateFrom", required = false) String dateFrom,
@@ -728,21 +741,23 @@ public class RestController {
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        PageRs pageRs = orderService.searchOrder(restaurantUser,reference,dateFrom,dateTo,page,size,locale);
+        PageRs pageRs = orderService.searchOrder(restaurantUser, reference, dateFrom, dateTo, page, size, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", pageRs, locale);
 
         return new ResponseEntity<>(messageEnvelope, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/dashboard",method = RequestMethod.GET)
+    @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
     public ResponseEntity<MessageEnvelope> searchOrder(HttpServletRequest httpServletRequest,
-                                                       @RequestParam(value = "type", required = false) String type) {
+                                                       @RequestParam(value = "type", required = false) String type,
+                                                       @RequestParam(value = "dateFrom", required = false) String dateFrom,
+                                                       @RequestParam(value = "dateTo", required = false) String dateTo) {
         Locale locale = httpServletRequest.getLocale();
 
         RestaurantUser restaurantUser = restUserService.getRestUser(httpServletRequest);
 
-        DashboardRestRs dashboardRestRs = dashboardService.generateRestDashboard(restaurantUser,type,locale);
+        DashboardRestRs dashboardRestRs = dashboardService.generateRestDashboard(restaurantUser, type, dateFrom, dateTo, locale);
 
         MessageEnvelope messageEnvelope = new MessageEnvelope(HttpStatus.OK, "success", dashboardRestRs, locale);
 

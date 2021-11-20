@@ -8,20 +8,20 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import restaurant.ms.core.dto.requests.ChangeRestUserPasswordRq;
-import restaurant.ms.core.dto.requests.RestUserCreateRq;
-import restaurant.ms.core.dto.requests.RestUserUpdateRq;
-import restaurant.ms.core.dto.requests.SpLoginRq;
+import restaurant.ms.core.dto.requests.*;
 import restaurant.ms.core.dto.responses.PageRs;
 import restaurant.ms.core.dto.responses.RestUserLoginRs;
 import restaurant.ms.core.dto.responses.RestUserSearchRs;
+import restaurant.ms.core.entities.Otp;
 import restaurant.ms.core.entities.RestaurantUser;
 import restaurant.ms.core.enums.RestaurantUserType;
 import restaurant.ms.core.enums.Status;
 import restaurant.ms.core.exceptions.HttpServiceException;
+import restaurant.ms.core.repositories.OtpRepo;
 import restaurant.ms.core.repositories.RestaurantUserRepo;
 import restaurant.ms.core.security.JwtTokenProvider;
 import restaurant.ms.core.security.JwtUser;
+import restaurant.ms.core.utils.Utility;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
@@ -42,6 +42,9 @@ public class RestUserService {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    private OtpRepo otpRepo;
 
     public RestUserLoginRs loginRestUser(SpLoginRq spLoginRq, Locale locale){
 
@@ -182,6 +185,23 @@ public class RestUserService {
         restaurantUser.setPassword(passwordEncoder.encode(changeRestUserPasswordRq.getNewPassword()));
 
         restaurantUserRepo.save(restaurantUser);
+    }
+
+    public void resetPasswordForUser(ForgetRestUserPasswordRq forgetRestUserPasswordRq, Locale locale) {
+        RestaurantUser restaurantUser = restaurantUserRepo.findRestaurantUserByUsername(forgetRestUserPasswordRq.getUsername());
+        if(restaurantUser == null || restaurantUser.getStatus().equals(Status.DELETED)){
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST,"Username not found");
+        }
+
+        if(restaurantUser.getStatus().equals(Status.INACTIVE)){
+            throw new HttpServiceException(HttpStatus.BAD_REQUEST,"Username inactive, contact your system administrator");
+        }
+
+        String newPassword = Utility.generatePassword(8);
+        restaurantUser.setPassword(passwordEncoder.encode(newPassword));
+        restaurantUserRepo.save(restaurantUser);
+
+        Utility.sendEmailResetPassword(restaurantUser,newPassword);
     }
 
 
